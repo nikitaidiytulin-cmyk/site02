@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Практические задания курса PyAuto — 8 production-level проектов Python-автоматизации с техническими заданиями, критериями оценки и дипломным проектом.">
+  <title>Практика — PyAuto Python Автоматизация</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23050a0f'/><text x='4' y='24' font-size='22'>🐍</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Practice-specific extensions that match existing style.css variables */
+    .practice-hero-kpi { display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-top:32px; }
+    .practice-kpi-card { background:var(--bg-card);border:1px solid var(--border-dim);border-radius:12px;padding:20px 16px;text-align:center;transition:border-color 0.3s; }
+    .practice-kpi-card:hover { border-color:var(--accent-green); }
+    .practice-kpi-num { font-family:var(--font-display);font-size:2rem;color:var(--accent-green);text-shadow:var(--glow-green);margin-bottom:4px; }
+    .practice-kpi-label { font-family:var(--font-code);font-size:0.72rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase; }
+
+    .grading-table { width:100%;border-collapse:collapse;margin:16px 0; }
+    .grading-table th { background:var(--bg-card);font-family:var(--font-code);font-size:0.72rem;letter-spacing:1px;color:var(--accent-cyan);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border-dim); }
+    .grading-table td { padding:10px 14px;border-bottom:1px solid var(--border-dim);color:var(--text-secondary);font-size:0.88rem; }
+    .grading-table tr:hover td { background:rgba(0,255,136,0.03); }
+    .grade-a { color:var(--accent-green);font-weight:600; }
+    .grade-b { color:var(--accent-cyan);font-weight:600; }
+    .grade-c { color:#f7c59f;font-weight:600; }
+    .grade-d { color:#ff6b6b;font-weight:600; }
+
+    .task-card { background:var(--bg-card);border:1px solid var(--border-dim);border-radius:16px;padding:32px;margin-bottom:40px;transition:border-color 0.3s; }
+    .task-card:hover { border-color:rgba(0,255,136,0.3); }
+    .task-card.diploma { border-color:var(--accent-green);box-shadow:0 0 32px rgba(0,255,136,0.1); }
+
+    .task-header { display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px; }
+    .task-num-badge { font-family:var(--font-display);font-size:0.7rem;letter-spacing:2px;padding:4px 12px;border-radius:4px;background:var(--bg-dark);border:1px solid var(--border-dim);color:var(--text-muted); }
+    .task-num-badge.diploma { background:rgba(0,255,136,0.1);border-color:var(--accent-green);color:var(--accent-green); }
+    .task-title { font-family:var(--font-display);font-size:1.3rem;color:var(--text-primary);margin:8px 0; }
+    .task-meta-row { display:flex;flex-wrap:wrap;gap:8px;margin:12px 0; }
+
+    .task-section { margin:20px 0; }
+    .task-section-title { font-family:var(--font-code);font-size:0.72rem;letter-spacing:2px;color:var(--accent-cyan);margin-bottom:10px;text-transform:uppercase;border-bottom:1px solid var(--border-dim);padding-bottom:6px; }
+
+    .task-tech-stack { display:flex;flex-wrap:wrap;gap:8px;margin:12px 0; }
+    .tech-chip { background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.2);color:var(--accent-cyan);font-family:var(--font-code);font-size:0.72rem;padding:3px 10px;border-radius:20px; }
+
+    .task-steps { counter-reset:step-counter; }
+    .task-step { counter-increment:step-counter;display:flex;gap:14px;margin-bottom:12px; }
+    .task-step::before { content:counter(step-counter);min-width:24px;height:24px;background:rgba(0,255,136,0.1);border:1px solid var(--accent-green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.7rem;color:var(--accent-green);flex-shrink:0;margin-top:2px; }
+    .task-step-content { color:var(--text-secondary);font-size:0.9rem;line-height:1.6; }
+    .task-step-content strong { color:var(--text-primary); }
+
+    .folder-tree { background:var(--bg-dark);border:1px solid var(--border-dim);border-radius:8px;padding:16px;font-family:var(--font-code);font-size:0.82rem;color:var(--text-secondary);line-height:1.8; }
+    .folder-tree .dir { color:var(--accent-cyan); }
+    .folder-tree .file { color:var(--text-secondary); }
+    .folder-tree .comment { color:var(--text-muted); }
+
+    .checklist { list-style:none;padding:0; }
+    .checklist li { display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;color:var(--text-secondary);font-size:0.88rem; }
+    .checklist li::before { content:"□";font-size:1rem;color:var(--accent-green);flex-shrink:0; }
+
+    .warn-box { background:rgba(255,107,107,0.07);border:1px solid rgba(255,107,107,0.3);border-radius:8px;padding:16px;margin:12px 0; }
+    .warn-box-title { color:#ff6b6b;font-family:var(--font-code);font-size:0.72rem;letter-spacing:1px;margin-bottom:8px; }
+
+    .tip-box { background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-radius:8px;padding:16px;margin:12px 0; }
+    .tip-box-title { color:var(--accent-green);font-family:var(--font-code);font-size:0.72rem;letter-spacing:1px;margin-bottom:8px; }
+
+    .star-box { background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);border-radius:8px;padding:16px;margin:12px 0; }
+    .star-box-title { color:#ffd700;font-family:var(--font-code);font-size:0.72rem;letter-spacing:1px;margin-bottom:8px; }
+
+    .badge-row { display:flex;flex-wrap:wrap;gap:10px;margin:16px 0; }
+    .badge { display:inline-flex;align-items:center;gap:6px;background:var(--bg-card);border:1px solid var(--border-dim);border-radius:6px;padding:6px 12px;font-family:var(--font-code);font-size:0.75rem; }
+    .badge.green { border-color:var(--accent-green);color:var(--accent-green); }
+    .badge.cyan { border-color:var(--accent-cyan);color:var(--accent-cyan); }
+    .badge.purple { border-color:var(--accent-purple);color:var(--accent-purple); }
+    .badge.gold { border-color:#ffd700;color:#ffd700; }
+
+    .progress-tracker { background:var(--bg-card);border:1px solid var(--border-dim);border-radius:12px;padding:20px;margin:16px 0; }
+    .pt-label { font-family:var(--font-code);font-size:0.7rem;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;display:flex;justify-content:space-between; }
+    .pt-bar { background:var(--bg-dark);border-radius:4px;height:6px;overflow:hidden; }
+    .pt-fill { height:100%;background:linear-gradient(90deg,var(--accent-green),var(--accent-cyan));border-radius:4px;transition:width 0.8s ease; }
+
+    .deadline-chip { display:inline-flex;align-items:center;gap:6px;background:rgba(255,107,107,0.08);border:1px solid rgba(255,107,107,0.25);color:#ff9999;font-family:var(--font-code);font-size:0.72rem;padding:4px 12px;border-radius:20px; }
+
+    .difficulty-indicator { display:inline-flex;gap:3px;align-items:center; }
+    .diff-dot { width:8px;height:8px;border-radius:50%;background:var(--border-dim); }
+    .diff-dot.active { background:var(--accent-green); }
+    .diff-dot.hard { background:#ff6b6b; }
+
+    @media(max-width:768px) {
+      .task-header { flex-direction:column; }
+      .task-card { padding:20px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand"><span>🐍</span> PYAUTO</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Главная</a></li>
+    <li><a href="lectures.html">Лекции</a></li>
+    <li><a href="practice.html" class="active">Практика</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="lectures.html#exam" class="nav-cta">Экзамен →</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  <div class="nav-progress"></div>
+</nav>
+
+<!-- HERO -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="section-label">/ практические задания</div>
+    <h1 class="section-title">Production-Level<br><span class="text-accent">Практика</span></h1>
+    <p style="color:var(--text-secondary);max-width:680px;margin-top:16px;line-height:1.7;">8 полноценных заданий уровня реального брифа от заказчика. Каждый проект — это production-ready решение с техническим заданием, архитектурой, критериями оценки и рекомендациями по масштабированию. Финальный дипломный проект объединяет все технологии курса.</p>
+
+    <div class="practice-hero-kpi">
+      <div class="practice-kpi-card">
+        <div class="practice-kpi-num">8</div>
+        <div class="practice-kpi-label">Проектов</div>
+      </div>
+      <div class="practice-kpi-card">
+        <div class="practice-kpi-num">100</div>
+        <div class="practice-kpi-label">Баллов максимум</div>
+      </div>
+      <div class="practice-kpi-card">
+        <div class="practice-kpi-num">6</div>
+        <div class="practice-kpi-label">Недель обучения</div>
+      </div>
+      <div class="practice-kpi-card">
+        <div class="practice-kpi-num">∞</div>
+        <div class="practice-kpi-label">Доступ к материалам</div>
+      </div>
+    </div>
+
+    <!-- Study Timer -->
+    <div style="margin-top:20px;display:flex;align-items:center;gap:12px;">
+      <span style="font-family:var(--font-code);font-size:0.75rem;color:var(--text-muted);">ВРЕМЯ ИЗУЧЕНИЯ:</span>
+      <span id="study-timer" style="font-family:var(--font-display);color:var(--accent-green);font-size:1rem;text-shadow:var(--glow-green);">00:00:00</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR LAYOUT -->
+<div class="sidebar-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <nav class="sidebar-nav" aria-label="Навигация по заданиям">
+      <div class="sidebar-nav-title">Задания</div>
+      <a href="#grading" class="sidebar-link"><span class="sidebar-link-num">📊</span> Система оценки</a>
+      <a href="#task-1" class="sidebar-link"><span class="sidebar-link-num">01</span> Сортировка файлов</a>
+      <a href="#task-2" class="sidebar-link"><span class="sidebar-link-num">02</span> Резервное копирование</a>
+      <a href="#task-3" class="sidebar-link"><span class="sidebar-link-num">03</span> Excel-отчёты</a>
+      <a href="#task-4" class="sidebar-link"><span class="sidebar-link-num">04</span> Парсер магазина</a>
+      <a href="#task-5" class="sidebar-link"><span class="sidebar-link-num">05</span> Telegram-бот</a>
+      <a href="#task-6" class="sidebar-link"><span class="sidebar-link-num">06</span> Email-рассылка</a>
+      <a href="#task-7" class="sidebar-link"><span class="sidebar-link-num">07</span> Создание .exe</a>
+      <a href="#task-8" class="sidebar-link" style="color:var(--accent-green);"><span class="sidebar-link-num">🏆</span> Дипломный проект</a>
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border-dim);display:flex;flex-direction:column;gap:8px;">
+        <a href="exam.html" class="btn btn-secondary" style="width:100%;justify-content:center;font-size:0.82rem;padding:10px 16px;border-color:var(--accent-cyan);color:var(--accent-cyan);">
+          <i class="fas fa-vial"></i> Экзамен
+        </a>
+        <a href="exam.html" class="btn btn-primary" style="width:100%;justify-content:center;font-size:0.82rem;padding:10px 16px;">
+          <i class="fas fa-graduation-cap"></i> Итоговый экзамен
+        </a>
+      </div>
+    </nav>
+
+    <!-- Progress Tracker in sidebar -->
+    <div style="margin-top:20px;padding:16px;background:var(--bg-card);border:1px solid var(--border-dim);border-radius:10px;">
+      <div style="font-family:var(--font-code);font-size:0.68rem;letter-spacing:1px;color:var(--text-muted);margin-bottom:12px;">ПРОГРЕСС ЗАДАНИЙ</div>
+      <div id="sidebar-progress-list">
+        <div class="pt-task-item" data-task="1" onclick="toggleTask(1)">
+          <span style="font-size:0.75rem;color:var(--text-muted);">01 · Сортировка файлов</span>
+          <span id="task-status-1" style="font-family:var(--font-code);font-size:0.68rem;color:var(--text-muted);">○ не начато</span>
+        </div>
+        <div class="pt-task-item" data-task="2" onclick="toggleTask(2)">
+          <span style="font-size:0.75rem;color:var(--text-muted);">02 · Резервное копирование</span>
+          <span id="task-status-2" style="font-family:var(--font-code);font-size:0.68rem;color:var(--text-muted);">○ не начато</span>
+        </div>
+        <div class="pt-task-item" data-task="3" onclick="toggleTask(3)">
+          <span style="font-size:0.75rem;color:var(--text-muted);">03 · Excel-отчёты</span>
+          <span id="task-status-3" style="font-family:var(--font-code);font-size:0.68rem;color:var(--text-muted);">○ не начато</span>
+        </div>
+        <div class="pt-task-item" data-task="4" onclick="toggleTask(4)">
+          <span style="font-size:0.75rem;color:var(--text-muted);">04 · Парсер магазина</span>
+          <span id="task-status-4" style="font-family:var(--font-code);font-size:0.68rem;color:var(--text-muted);">○ не начато</span>
+        </div>
+        <div class="pt-task-item" data-task="5" onclick="toggleTask(5)">
+          <span style="font-size:0.75rem;color:var(--text-muted);">05 · Telegram-бот</span>
+          <span id="task-status-5" style="font-family:var(--font-code);font-size:0.68rem;color:var(--text-muted);">○ не начато</span>
+        </div>
+        <div class="pt-task-item" data-task="6" onclick="toggleTask(6)">
+          <span style="font-size:0.75rem;color:var(--text-muted);">06 · Email-рассылка</span>
+          <span id="task-status-6" style="font-family:var(--font-code);font-size:0.68rem;color:var(--text-muted);">○ не начато</span>
+        </div>
+        <div class="pt-task-item" data-task="7" onclick="toggleTask(7)">
+          <span style="font-size:0.75rem;color:var(--text-muted);">07 · Создание .exe</span>
+          <span id="task-status-7" style="font-family:var(--font-code);font-size:0.68rem;color:var(--text-muted);">○ не начато</span>
+        </div>
+        <div class="pt-task-item" data-task="8" onclick="toggleTask(8)" style="border-top:1px solid var(--border-dim);padding-top:8px;margin-top:4px;">
+          <span style="font-size:0.75rem;color:var(--accent-green);">🏆 Дипломный проект</span>
+          <span id="task-status-8" style="font-family:var(--font-code);font-size:0.68rem;color:var(--text-muted);">○ не начато</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="pt-label"><span>Выполнено</span><span id="progress-fraction">0 / 8</span></div>
+        <div class="pt-bar"><div class="pt-fill" id="overall-progress-bar" style="width:0%;"></div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="lecture-content">
+
+    <!-- ── GRADING SYSTEM ── -->
+    <article class="lecture-section" id="grading">
+      <div class="lecture-header">
+        <span class="lecture-num-badge">СИСТЕМА ОЦЕНКИ</span>
+        <h2>Критерии оценивания и уровни</h2>
+      </div>
+
+      <p>Каждое практическое задание оценивается по единой системе критериев, отражающей стандарты code review в реальных IT-командах. Максимум — <strong>100 баллов</strong> за все 8 заданий.</p>
+
+      <table class="grading-table">
+        <thead>
+          <tr>
+            <th>Оценка</th>
+            <th>Баллы</th>
+            <th>Критерии</th>
+            <th>Уровень</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="grade-a">A — Отлично</span></td>
+            <td>90–100%</td>
+            <td>Полный функционал, logging, .env, type hints, README, Docker, тесты</td>
+            <td>Middle-ready</td>
+          </tr>
+          <tr>
+            <td><span class="grade-b">B — Хорошо</span></td>
+            <td>75–89%</td>
+            <td>Полный функционал, logging, .env config, базовый README</td>
+            <td>Junior+</td>
+          </tr>
+          <tr>
+            <td><span class="grade-c">C — Зачтено</span></td>
+            <td>60–74%</td>
+            <td>Основной функционал работает, базовая обработка ошибок</td>
+            <td>Junior</td>
+          </tr>
+          <tr>
+            <td><span class="grade-d">D — Доработать</span></td>
+            <td>&lt;60%</td>
+            <td>Частичная реализация, скрипт падает на edge cases</td>
+            <td>Нужна доработка</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Обязательные требования к каждому заданию</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:16px 0;">
+        <div class="tip-box">
+          <div class="tip-box-title">✅ БАЗОВЫЙ УРОВЕНЬ (C)</div>
+          <ul class="checklist">
+            <li>Скрипт выполняет заявленный функционал</li>
+            <li>Обработка базовых исключений (FileNotFoundError, HTTPError)</li>
+            <li>Понятные имена переменных и функций</li>
+            <li>requirements.txt с зависимостями</li>
+          </ul>
+        </div>
+        <div class="tip-box" style="border-color:var(--accent-cyan);background:rgba(0,212,255,0.05);">
+          <div class="tip-box-title" style="color:var(--accent-cyan);">⭐ СТАНДАРТ (B)</div>
+          <ul class="checklist">
+            <li>Логирование через logging + RotatingFileHandler</li>
+            <li>Конфигурация через .env + python-dotenv</li>
+            <li>README.md с описанием и инструкцией запуска</li>
+            <li>Разделение кода: config / logic / main</li>
+          </ul>
+        </div>
+        <div class="tip-box" style="border-color:var(--accent-green);">
+          <div class="tip-box-title">🏆 PRODUCTION (A)</div>
+          <ul class="checklist">
+            <li>Type hints на всех функциях</li>
+            <li>Docstrings в формате Google</li>
+            <li>Dockerfile + docker-compose.yml</li>
+            <li>GitHub Actions CI/CD workflow</li>
+            <li>Pytest хотя бы для ключевых функций</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="badge-row">
+        <div class="badge green">🐍 Python Starter — 1 задание</div>
+        <div class="badge cyan">⚡ Automator — 4 задания</div>
+        <div class="badge purple">🔧 Engineer — 7 заданий</div>
+        <div class="badge gold">🏆 Production Dev — все 8 + диплом A</div>
+      </div>
+    </article>
+
+    <!-- ════════════════════════════════════
+         ЗАДАНИЕ 1: СОРТИРОВКА ФАЙЛОВ
+    ════════════════════════════════════ -->
+    <article class="lecture-section task-card" id="task-1">
+      <div class="task-header">
+        <div>
+          <span class="task-num-badge">ЗАДАНИЕ 01</span>
+          <div class="task-title">Автоматическая сортировка файлов</div>
+          <div class="task-meta-row">
+            <div class="difficulty-indicator" title="Сложность">
+              <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+              <span style="margin-left:6px;font-family:var(--font-code);font-size:0.7rem;color:var(--text-muted);">BEGINNER</span>
+            </div>
+            <span class="deadline-chip"><i class="fas fa-clock"></i> Дедлайн: Неделя 2</span>
+            <span class="badge">12 баллов</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:var(--font-code);font-size:0.68rem;color:var(--text-muted);">СТАТУС</div>
+          <button class="btn btn-secondary" style="margin-top:6px;font-size:0.78rem;padding:6px 14px;" onclick="toggleTask(1)">○ Отметить выполненным</button>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🎯 Цель проекта</div>
+        <p style="color:var(--text-secondary);">Разработать автоматическую систему сортировки файлов, которая мониторит указанную директорию в реальном времени и раскладывает новые файлы по папкам согласно настраиваемым правилам. Решение должно работать как фоновый демон с полным логированием операций.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">💼 Бизнес-кейс</div>
+        <p style="color:var(--text-secondary);">Отдел финансового документооборота компании получает ежедневно 200–500 файлов разных форматов на общий сетевой диск. Бухгалтеры тратят 1.5–2 часа в день на ручное перекладывание файлов по папкам. Требуется автоматизировать процесс: PDF-счета → в /invoices, XLS-отчёты → в /reports, JPEG-сканы → в /scans, и т.д.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📋 Техническое задание</div>
+        <div class="task-steps">
+          <div class="task-step"><div class="task-step-content"><strong>Настройка окружения</strong>: создать виртуальное окружение venv, установить watchdog, python-dotenv. Зафиксировать зависимости в requirements.txt с точными версиями через pip freeze.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Конфигурация через .env</strong>: вынести SOURCE_DIR, LOG_DIR, LOG_LEVEL, CONFIG_PATH в .env файл. Создать .env.example с комментариями для каждой переменной. Загрузка через python-dotenv.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Правила сортировки в JSON</strong>: разработать структуру rules.json с маппингом расширений → папки. Поддержка wildcards (*.tmp, *.bak), групп расширений (images: [jpg, png, gif]), правил по маске имени файла.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Загрузка и валидация конфига</strong>: модуль config.py читает rules.json, валидирует структуру через dataclasses или Pydantic. При ошибке конфига — понятное сообщение с указанием строки и поля.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Мониторинг директории</strong> через watchdog.FileSystemEventHandler — реагировать на FileCreatedEvent и FileMovedEvent. Игнорировать временные файлы (*.tmp, ~*). Добавить задержку 0.5s перед обработкой — файл может ещё писаться.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Логика сортировки</strong>: функция sort_file(path) определяет целевую папку по правилам. Приоритет правил: точное совпадение имени > маска > расширение > группа > default. Возвращает путь назначения или None если нет подходящего правила.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Создание целевых папок</strong>: перед перемещением убедиться что папка назначения существует. pathlib.Path.mkdir(parents=True, exist_ok=True). Не создавать папки в dry-run режиме.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Обработка конфликтов имён</strong>: при совпадении имён файлов добавлять timestamp к имени (_20240115_143022), не перезаписывать. Функция resolve_conflict(target_path) → уникальный Path.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Безопасное перемещение</strong>: обернуть shutil.move() в try/except PermissionError, FileNotFoundError, OSError. При PermissionError — retry 3 раза с задержкой 1s. Если после 3 попыток ошибка — записать в failed_files.log.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Логирование операций</strong>: каждая операция перемещения — в файл sort.log с RotatingFileHandler (max 5MB × 3 файла). Формат: timestamp · уровень · файл → папка · размер · время операции в мс.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Статистика сессии</strong>: класс SessionStats собирает: количество перемещённых файлов, суммарный размер, разбивку по категориям, список ошибок, время работы. Потокобезопасный (threading.Lock).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Graceful shutdown</strong>: перехватить SIGTERM и KeyboardInterrupt через signal.signal(). При остановке — дождаться завершения текущей операции, распечатать итоговый отчёт сессии через rich.console или tabulate.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>CLI-интерфейс</strong> через argparse: --source (директория), --config (путь к rules.json), --dry-run (показать что сделает без выполнения), --daemon (запустить как фоновый процесс), --verbose (подробный вывод).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Dry-run режим</strong>: запустить полную логику определения целевой папки и разрешения конфликтов, но без реального перемещения. Вывести красивую таблицу в терминал: файл | будет перемещён в | размер.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Обработка уже существующих файлов</strong>: при запуске с флагом --initial-scan — пройти по всем существующим файлам в source и отсортировать их. Защита от повторной сортировки уже отсортированных файлов через SQLite-журнал.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Undo-функция</strong>: каждое перемещение записывается в undo_log.json {timestamp, src, dst}. Команда --undo N отменяет последние N операций в обратном порядке. Защита от undo если файл уже перемещён кем-то ещё.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Юнит-тесты</strong>: pytest-тесты для sort_file(), resolve_conflict(), config validation, stats. Использовать tmp_path fixture для изолированных тестов файловой системы. Coverage > 70% для модулей sorter.py и config.py.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Dockerfile</strong>: многоэтапная сборка (python:3.12-slim). Bind-mount для мониторируемой папки через volume. docker-compose.yml с restart: always, healthcheck через проверку PID файла, монтирование logs/ как named volume.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>GitHub Actions CI</strong>: workflow .github/workflows/ci.yml — запуск pytest, flake8, mypy при push в main. Badge статуса в README. Публикация coverage report как artifact.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Документация README.md</strong>: описание проекта, схема rules.json с примерами, Quick Start за 5 минут, раздел Docker deployment, таблица всех CLI-флагов, примеры типичных конфигураций (для Downloads, для рабочего стола, для серверной директории).</div></div>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📁 Структура проекта</div>
+        <div class="folder-tree">
+<span class="dir">file-sorter/</span>
+├── <span class="file">main.py</span>           <span class="comment"># Точка входа, CLI через argparse</span>
+├── <span class="file">sorter.py</span>         <span class="comment"># FileSystemEventHandler, логика сортировки</span>
+├── <span class="file">config.py</span>         <span class="comment"># Загрузка конфигурации из JSON/.env</span>
+├── <span class="file">rules.json</span>        <span class="comment"># Правила сортировки по расширениям</span>
+├── <span class="file">.env</span>              <span class="comment"># SOURCE_DIR, LOG_DIR, LOG_LEVEL</span>
+├── <span class="file">.env.example</span>      <span class="comment"># Шаблон для разработчика</span>
+├── <span class="file">requirements.txt</span>  <span class="comment"># watchdog, python-dotenv</span>
+├── <span class="file">README.md</span>         <span class="comment"># Документация, примеры использования</span>
+├── <span class="dir">logs/</span>              <span class="comment"># sort.log, rotation</span>
+└── <span class="dir">tests/</span>
+    └── <span class="file">test_sorter.py</span>    <span class="comment"># Тесты для production grade</span>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🔧 Стек технологий</div>
+        <div class="task-tech-stack">
+          <span class="tech-chip">Python 3.12</span>
+          <span class="tech-chip">watchdog</span>
+          <span class="tech-chip">pathlib</span>
+          <span class="tech-chip">shutil</span>
+          <span class="tech-chip">logging</span>
+          <span class="tech-chip">python-dotenv</span>
+          <span class="tech-chip">argparse</span>
+          <span class="tech-chip">json</span>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">⚠️ Типичные ошибки</div>
+        <div class="warn-box">
+          <div class="warn-box-title">❌ ЧАСТЫЕ ОШИБКИ НАЧИНАЮЩИХ</div>
+          <ul style="color:var(--text-secondary);font-size:0.88rem;margin:0;padding-left:18px;">
+            <li>Использовать os.path вместо pathlib — в 2024 году pathlib обязателен</li>
+            <li>Не обрабатывать PermissionError при доступе к занятым файлам</li>
+            <li>Не добавлять задержку (time.sleep(0.5)) перед перемещением — файл может ещё писаться</li>
+            <li>Хардкодить пути в коде — всё должно быть в .env или config.json</li>
+            <li>Не проверять существование целевой папки перед shutil.move()</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="star-box">
+        <div class="star-box-title">⭐⭐ ЗАДАНИЯ СО ЗВЁЗДОЧКОЙ (Junior+)</div>
+        <ul style="color:var(--text-secondary);font-size:0.88rem;margin:0;padding-left:18px;">
+          <li>Добавить Telegram-уведомление при сортировке файла крупнее заданного порога</li>
+          <li>Реализовать «отмену» последней операции (undo-файл с историей перемещений)</li>
+          <li>Написать Docker-контейнер с bind-mount для мониторируемой папки</li>
+          <li>Добавить dry-run режим с красивым preview в терминале</li>
+        </ul>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📊 Критерии оценки</div>
+        <table class="grading-table">
+          <thead><tr><th>Критерий</th><th>Баллы</th></tr></thead>
+          <tbody>
+            <tr><td>watchdog-мониторинг работает в реальном времени</td><td>3</td></tr>
+            <tr><td>Правила сортировки вынесены в конфиг-файл</td><td>2</td></tr>
+            <tr><td>Обработка конфликтов имён</td><td>2</td></tr>
+            <tr><td>Logging с RotatingFileHandler</td><td>2</td></tr>
+            <tr><td>.env конфигурация</td><td>1</td></tr>
+            <tr><td>argparse CLI</td><td>1</td></tr>
+            <tr><td>README с примером использования</td><td>1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <!-- ════════════════════════════════════
+         ЗАДАНИЕ 2: РЕЗЕРВНОЕ КОПИРОВАНИЕ
+    ════════════════════════════════════ -->
+    <article class="lecture-section task-card" id="task-2">
+      <div class="task-header">
+        <div>
+          <span class="task-num-badge">ЗАДАНИЕ 02</span>
+          <div class="task-title">Скрипт резервного копирования данных</div>
+          <div class="task-meta-row">
+            <div class="difficulty-indicator">
+              <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot"></div>
+              <span style="margin-left:6px;font-family:var(--font-code);font-size:0.7rem;color:var(--text-muted);">INTERMEDIATE</span>
+            </div>
+            <span class="deadline-chip"><i class="fas fa-clock"></i> Дедлайн: Неделя 2</span>
+            <span class="badge">12 баллов</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:var(--font-code);font-size:0.68rem;color:var(--text-muted);">СТАТУС</div>
+          <button class="btn btn-secondary" style="margin-top:6px;font-size:0.78rem;padding:6px 14px;" onclick="toggleTask(2)">○ Отметить выполненным</button>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🎯 Цель проекта</div>
+        <p style="color:var(--text-secondary);">Создать корпоративный скрипт инкрементального резервного копирования данных с поддержкой локального и удалённого хранения (FTP/SFTP), сжатием архивов, ротацией старых копий и уведомлениями о результате.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">💼 Бизнес-кейс</div>
+        <p style="color:var(--text-secondary);">Небольшое предприятие хранит базы 1С, Excel-таблицы и документы на локальном сервере. Системный администратор делает бэкапы вручную раз в неделю — это ненадёжно. Нужна автоматизированная система: ежедневный бэкап в 03:00, хранение 7 последних копий, сжатие ZIP, уведомление директора в Telegram об успехе/ошибке.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📋 Техническое задание</div>
+        <div class="task-steps">
+          <div class="task-step"><div class="task-step-content"><strong>Настройка окружения</strong>: создать venv, установить зависимости. Структура проекта с разделением на модули: backup.py, archiver.py, notifier.py, reporter.py, config.py, scheduler.py.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Конфигурация через .env</strong>: SOURCE_DIRS (список через запятую), BACKUP_DIR, MAX_BACKUPS, COMPRESSION_LEVEL (0-9), TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, SCHEDULE_TIME, LOG_LEVEL. Валидация всех параметров при старте.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Сканирование источника</strong>: рекурсивный обход SOURCE_DIR через pathlib. Для каждого файла получить: путь, размер, mtime, SHA256-хеш (hashlib). Построить словарь {relative_path: {size, mtime, hash}}.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Инкрементальный алгоритм</strong>: загрузить manifest последнего бэкапа из JSON. Сравнить с текущим сканированием. Отобрать файлы: новые (нет в manifest), изменённые (hash отличается), удалённые (есть в manifest, нет в источнике).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Полный бэкап (--full)</strong>: игнорировать manifest, копировать все файлы. Использовать при первом запуске или при повреждении manifest. Флаг --full через argparse.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>ZIP-архивирование</strong>: zipfile.ZipFile с компрессией ZIP_DEFLATED. Имя архива: backup_YYYYMMDD_HHMMSS.zip. Добавлять файлы с сохранением относительных путей. Прогресс-бар через tqdm или rich.progress.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Верификация архива</strong>: после создания проверить целостность ZIP через zipfile.testzip(). При ошибке — удалить повреждённый архив, записать в лог, отправить Telegram-алерт.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Обновление manifest</strong>: после успешного архивирования сохранить manifest.json в директории бэкапа. Формат: {created_at, source_dir, files_count, total_size, file_list: {...}}.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Ротация архивов</strong>: после сохранения нового архива — получить список всех backup_*.zip отсортированный по дате. Удалить архивы старше MAX_BACKUPS. Логировать каждое удаление с размером освобождённого места.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Проверка свободного места</strong>: перед началом архивирования вычислить размер нового архива (размер источника × 0.7 как оценка). Проверить shutil.disk_usage(BACKUP_DIR). Если менее 10% диска свободно — остановить и отправить алерт.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Генерация отчёта</strong>: файл backup_report_YYYYMMDD.txt — время начала/конца, длительность, размер архива, количество файлов (новых/изменённых/удалённых), скорость записи MB/s, топ-10 самых больших файлов, список ошибок.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Telegram-уведомления</strong>: при успехе — сообщение с emoji, кратким summary (размер, файлов, время). При ошибке — отдельное сообщение с traceback (первые 3000 символов). Функция send_telegram(text, parse_mode='HTML').</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Планировщик задач</strong>: schedule library — запускать бэкап по расписанию из SCHEDULE_TIME (формат HH:MM). Daemon loop с sleep(1). При ручном запуске без --daemon — выполнить бэкап сразу и завершиться.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Восстановление из бэкапа</strong>: команда --restore ARCHIVE_PATH [--target DIR] — распаковать архив в указанную директорию. С подтверждением если целевая директория не пуста. Проверка целостности перед распаковкой.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Логирование</strong>: RotatingFileHandler (10MB × 5 файлов). Отдельный лог для ошибок (ERROR и выше). Формат: ISO timestamp · PID · level · module · message. Логировать начало/конец каждой операции с длительностью.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Обработка ошибок и retry</strong>: декоратор @retry(attempts=3, delay=5) для сетевых операций (Telegram API). При PermissionError на файл — пропустить файл, залогировать, продолжить. Не прерывать весь бэкап из-за одного файла.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Тесты</strong>: pytest с tmp_path. Тестировать: инкрементальный алгоритм (create/modify/delete detection), ротацию (создать N+1 архивов → проверить что N осталось), верификацию (намеренно повредить ZIP → поймать ошибку).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Dockerfile</strong>: FROM python:3.12-slim. Volumes для source и backup директорий. Cron внутри контейнера или schedule daemon. HEALTHCHECK через проверку last_backup_timestamp из manifest.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>docker-compose.yml</strong>: сервис backup-system с restart: always, bind-mounts для источника и хранилища, .env через env_file, healthcheck. Опциональный сервис для просмотра логов через dozzle.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>README и документация</strong>: Quick Start, описание всех переменных .env с примерами, схема инкрементального алгоритма в Mermaid, инструкция по восстановлению данных, FAQ по типичным ошибкам (нет места, Telegram недоступен, повреждён manifest).</div></div>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📁 Структура проекта</div>
+        <div class="folder-tree">
+<span class="dir">backup-system/</span>
+├── <span class="file">main.py</span>           <span class="comment"># Точка входа, argparse, scheduler</span>
+├── <span class="file">backup.py</span>         <span class="comment"># Логика инкрементального копирования</span>
+├── <span class="file">archiver.py</span>       <span class="comment"># ZIP-архивирование, rotation</span>
+├── <span class="file">notifier.py</span>       <span class="comment"># Telegram-уведомления</span>
+├── <span class="file">reporter.py</span>       <span class="comment"># Генерация текстовых отчётов</span>
+├── <span class="file">config.py</span>         <span class="comment"># Pydantic settings или dotenv</span>
+├── <span class="file">.env</span>
+├── <span class="file">.env.example</span>
+├── <span class="file">requirements.txt</span>
+├── <span class="file">Dockerfile</span>
+├── <span class="file">README.md</span>
+└── <span class="dir">logs/</span>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🔧 Стек технологий</div>
+        <div class="task-tech-stack">
+          <span class="tech-chip">Python 3.12</span>
+          <span class="tech-chip">pathlib</span>
+          <span class="tech-chip">zipfile</span>
+          <span class="tech-chip">hashlib</span>
+          <span class="tech-chip">schedule</span>
+          <span class="tech-chip">python-dotenv</span>
+          <span class="tech-chip">requests (Telegram)</span>
+          <span class="tech-chip">logging</span>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <div class="warn-box-title">❌ ТИПИЧНЫЕ ОШИБКИ</div>
+        <ul style="color:var(--text-secondary);font-size:0.88rem;margin:0;padding-left:18px;">
+          <li>Не проверять, не занят ли файл другим процессом (PermissionError) — добавлять retry с задержкой</li>
+          <li>Не считать свободное место на диске перед архивацией — disk_usage()</li>
+          <li>Хардкодить Telegram BOT_TOKEN в коде — это критическая уязвимость</li>
+        </ul>
+      </div>
+
+      <div class="star-box">
+        <div class="star-box-title">⭐⭐ ЗАДАНИЯ СО ЗВЁЗДОЧКОЙ</div>
+        <ul style="color:var(--text-secondary);font-size:0.88rem;margin:0;padding-left:18px;">
+          <li>Загрузка архива на удалённый FTP/SFTP сервер через paramiko или ftplib</li>
+          <li>Шифрование архива с паролем через pyzipper</li>
+          <li>Dashboard в терминале через rich library с прогресс-баром</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ════════════════════════════════════
+         ЗАДАНИЕ 3: EXCEL-ОТЧЁТЫ
+    ════════════════════════════════════ -->
+    <article class="lecture-section task-card" id="task-3">
+      <div class="task-header">
+        <div>
+          <span class="task-num-badge">ЗАДАНИЕ 03</span>
+          <div class="task-title">Генератор Excel-отчётов с диаграммами</div>
+          <div class="task-meta-row">
+            <div class="difficulty-indicator">
+              <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot"></div>
+              <span style="margin-left:6px;font-family:var(--font-code);font-size:0.7rem;color:var(--text-muted);">INTERMEDIATE</span>
+            </div>
+            <span class="deadline-chip"><i class="fas fa-clock"></i> Дедлайн: Неделя 3</span>
+            <span class="badge">13 баллов</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <button class="btn btn-secondary" style="margin-top:6px;font-size:0.78rem;padding:6px 14px;" onclick="toggleTask(3)">○ Отметить выполненным</button>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🎯 Цель проекта</div>
+        <p style="color:var(--text-secondary);">Создать систему автоматической генерации ежедневных Excel-отчётов из CSV-данных или базы данных. Отчёт должен включать стилизованные таблицы, сводные данные, диаграммы, условное форматирование и автоматически отправляться по email.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">💼 Бизнес-кейс</div>
+        <p style="color:var(--text-secondary);">Руководство интернет-магазина каждое утро ожидает Excel-отчёт по продажам за вчера: сводка по категориям товаров, топ-10 позиций, сравнение с прошлой неделей, диаграмма тренда. Аналитик тратит 40 минут на сборку вручную. Нужен скрипт, который читает CSV-выгрузку из CRM и генерирует готовый отчёт за 10 секунд.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📋 Техническое задание</div>
+        <div class="task-steps">
+          <div class="task-step"><div class="task-step-content"><strong>Настройка проекта</strong>: структура модулей data_processor.py, excel_builder.py, emailer.py, config.py, scheduler.py. Типизация через dataclasses для ReportConfig, SalesData, ReportResult.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Конфигурация</strong>: .env с CSV_PATH или DB_CONNECTION, OUTPUT_DIR, EMAIL_RECIPIENTS (список), SMTP_HOST/PORT/USER/PASS, SCHEDULE_TIME, REPORT_PERIOD_DAYS. Валидация Pydantic.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Чтение данных из CSV</strong>: pandas читает CSV с продажами. Автоматическое определение кодировки через chardet. Валидация обязательных колонок с понятными сообщениями. Приведение типов дат через pd.to_datetime.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Альтернативный источник — SQLite/PostgreSQL</strong>: опциональная загрузка через pd.read_sql(). Параметризованный SQL-запрос с диапазоном дат. Закрытие соединения через context manager.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Агрегация данных</strong>: groupby по категориям товаров → сумма выручки, количество. pivot_table по дням → таблица продаж. nlargest(10) для топ-позиций. pct_change() для сравнения с предыдущим периодом.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Вычисление KPI</strong>: итоговая выручка, средний чек, количество заказов, конверсия по категориям, самый продаваемый час дня. Оформить как датакласс KPIReport для передачи в excel_builder.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Структура Excel-файла</strong>: 4 листа — «Сводка» (KPI), «По категориям», «Топ-10 товаров», «Тренд по дням». openpyxl.Workbook с именованными листами. Заголовок с датой генерации.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Стилизация заголовков</strong>: PatternFill для шапки таблицы (тёмный фон), Font(bold=True, color='FFFFFF'), Alignment(horizontal='center'). Ширина колонок через column_dimensions[col].width = max_length.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Условное форматирование</strong>: ColorScaleRule для столбца «Изменение %» — красный (отрицательные) → белый (0) → зелёный (положительные). DataBar для столбца выручки. Rule через openpyxl.formatting.rule.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Числовые форматы</strong>: суммы в формате #,##0.00 ₽, проценты в 0.0%, даты в DD.MM.YYYY. Применять через cell.number_format. Выравнивание: числа по правому краю, текст по левому.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Заморозка строк и фильтры</strong>: freeze_panes='A2' для фиксации заголовка. auto_filter.ref для включения фильтров на всех таблицах. Сортировка данных перед записью.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>BarChart для категорий</strong>: BarChart с данными из листа «По категориям». Подписи осей, легенда, заголовок диаграммы. Размещение рядом с таблицей через chart.anchor = 'E2'. Цвета серий через GraphicalProperties.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>LineChart для тренда</strong>: LineChart с маркерами на листе «Тренд по дням». Две серии — текущий период и предыдущий. Формат дат на оси X через DateAxis. Smooth=True для сглаженной линии.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Лист «Сводка» (KPI Dashboard)</strong>: крупные числа выручки в стиле дашборда. Merge cells для красивого оформления. Иконки/символы через Unicode в ячейках. Кнопки-ссылки между листами через Hyperlink.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Email с вложением</strong>: smtplib.SMTP_SSL или STARTTLS. MIMEMultipart('mixed') → MIMEText(html_body, 'html') + MIMEApplication(xlsx_data). Тема письма с датой и суммой выручки. HTML-тело через Jinja2 шаблон.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>HTML-тело письма</strong>: Jinja2 шаблон email_template.html с inline-CSS (для Gmail). Таблица KPI, топ-3 категории с цветными полосками, ссылка на полный отчёт. Адаптивная вёрстка для мобильных.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Планировщик</strong>: schedule.every().day.at(SCHEDULE_TIME).do(generate_and_send). Daemon loop. Логировать следующий запуск при старте. Команда --now для немедленной генерации без ожидания расписания.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Обработка пустых данных</strong>: если за период нет продаж — генерировать «пустой» отчёт с соответствующим сообщением вместо ошибки. Предупреждение в Telegram. Не падать на пустом DataFrame.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Тесты</strong>: pytest с фикстурой sample_df (100 строк синтетических данных). Тестировать: агрегацию (проверить суммы), форматирование чисел, что xlsx файл открывается без ошибок, что письмо формируется с вложением.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Документация и README</strong>: пример CSV с правильной структурой, описание всех параметров .env, инструкция по настройке SMTP для Gmail/Yandex, скриншот готового отчёта, пример сгенерированного письма.</div></div>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📁 Структура проекта</div>
+        <div class="folder-tree">
+<span class="dir">excel-reporter/</span>
+├── <span class="file">main.py</span>
+├── <span class="file">data_processor.py</span>  <span class="comment"># pandas: чтение, обработка, агрегация</span>
+├── <span class="file">excel_builder.py</span>   <span class="comment"># openpyxl: стили, диаграммы, форматирование</span>
+├── <span class="file">emailer.py</span>         <span class="comment"># smtplib, MIME, вложения</span>
+├── <span class="file">config.py</span>
+├── <span class="dir">templates/</span>
+│   └── <span class="file">styles.py</span>        <span class="comment"># Константы стилей Excel</span>
+├── <span class="dir">data/</span>              <span class="comment"># CSV-файлы входящих данных</span>
+├── <span class="dir">output/</span>            <span class="comment"># Сгенерированные XLSX</span>
+└── <span class="file">requirements.txt</span>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🔧 Стек технологий</div>
+        <div class="task-tech-stack">
+          <span class="tech-chip">Python 3.12</span>
+          <span class="tech-chip">pandas 2.x</span>
+          <span class="tech-chip">openpyxl</span>
+          <span class="tech-chip">chardet</span>
+          <span class="tech-chip">smtplib</span>
+          <span class="tech-chip">Jinja2</span>
+          <span class="tech-chip">schedule</span>
+          <span class="tech-chip">python-dotenv</span>
+        </div>
+      </div>
+
+      <div class="star-box">
+        <div class="star-box-title">⭐⭐⭐ ЗАДАНИЯ СО ЗВЁЗДОЧКОЙ (Middle)</div>
+        <ul style="color:var(--text-secondary);font-size:0.88rem;margin:0;padding-left:18px;">
+          <li>Интеграция с Google Sheets API: запись итогов в облачную таблицу</li>
+          <li>HTML-версия отчёта через pandas.to_html() + Jinja2 шаблон</li>
+          <li>Интерактивный дашборд через plotly express как отдельный HTML-файл</li>
+          <li>Параметризированные отчёты: период через argparse --from --to</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ════════════════════════════════════
+         ЗАДАНИЕ 4: ПАРСЕР ИНТЕРНЕТ-МАГАЗИНА
+    ════════════════════════════════════ -->
+    <article class="lecture-section task-card" id="task-4">
+      <div class="task-header">
+        <div>
+          <span class="task-num-badge">ЗАДАНИЕ 04</span>
+          <div class="task-title">Парсер интернет-магазина</div>
+          <div class="task-meta-row">
+            <div class="difficulty-indicator">
+              <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot hard"></div>
+              <span style="margin-left:6px;font-family:var(--font-code);font-size:0.7rem;color:#ff9999;">ADVANCED</span>
+            </div>
+            <span class="deadline-chip"><i class="fas fa-clock"></i> Дедлайн: Неделя 4</span>
+            <span class="badge">14 баллов</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <button class="btn btn-secondary" style="margin-top:6px;font-size:0.78rem;padding:6px 14px;" onclick="toggleTask(4)">○ Отметить выполненным</button>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🎯 Цель проекта</div>
+        <p style="color:var(--text-secondary);">Разработать production-ready парсер интернет-магазина с обходом anti-bot защиты, pagination, сохранением в pandas DataFrame и мониторингом изменений цен. Система должна запускаться по расписанию и присылать алерты в Telegram при изменении цены.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">💼 Бизнес-кейс</div>
+        <p style="color:var(--text-secondary);">Владелец интернет-магазина электроники хочет мониторить цены 3 конкурентов на 500+ SKU. Менеджеры делают это вручную раз в неделю — слишком медленно. Нужен парсер, который раз в 4 часа обходит страницы конкурентов, сравнивает цены с нашим каталогом и присылает отчёт: «товар X у конкурента Y дешевле на 15% — рассмотреть скидку».</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📋 Техническое задание</div>
+        <div class="task-steps">
+          <div class="task-step"><div class="task-step-content"><strong>Настройка браузера</strong>: undetected-chromedriver с опциями: --no-sandbox, --disable-blink-features=AutomationControlled. Скрыть navigator.webdriver через CDP execute_cdp_cmd. Случайный User-Agent из fake-useragent.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Имитация человеческого поведения</strong>: случайные задержки между запросами (random.uniform(2, 5)). Случайное движение мыши через ActionChains. Скроллинг страницы перед парсингом. Случайная пауза при переходах.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Обработка cookies и сессий</strong>: сохранять cookies в JSON после первого запуска, загружать при следующем. Если сайт требует авторизацию — логиниться один раз, сохранять сессию. Обнаружение captcha и логирование.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Структура парсера</strong>: класс ShopScraper с методами get_page(url), parse_category(url), parse_product(element), extract_price(element). Отдельный класс для каждого сайта-конкурента наследуется от BaseShopScraper.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Парсинг карточки товара</strong>: явные ожидания WebDriverWait + EC.presence_of_element_located. Извлечь: название, цену (очистить от пробелов и символов), наличие, рейтинг, количество отзывов, URL, изображение URL, дату парсинга.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Обход пагинации</strong>: найти кнопку «следующая страница» через CSS-селектор. Проверить её наличие и активность (не disabled). Перейти на следующую страницу. Остановиться при отсутствии кнопки или пустой странице результатов.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Retry с тенacity</strong>: декоратор @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=10)) для метода get_page(). Перехватывать TimeoutException, StaleElementReferenceException, WebDriverException. Логировать каждую попытку.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Скриншот при ошибке</strong>: в except блоке — driver.save_screenshot(f'error_{timestamp}.png'). Сохранять в папку screenshots/. При критической ошибке парсинга — прикрепить скриншот к Telegram-алерту через send_photo().</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Сохранение данных в pandas</strong>: формировать DataFrame из списка словарей. Добавить колонки parsed_at (datetime), source_site (имя конкурента). Сохранить в data/latest.csv через to_csv(index=False, encoding='utf-8-sig').</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>История цен</strong>: при каждом запуске копировать latest.csv в data/history/prices_YYYYMMDD_HHMMSS.csv. Хранить не более 30 последних файлов (ротация). Загружать историю для построения трендов.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Анализ изменений цен</strong>: загрузить предыдущий latest.csv, объединить с текущим через merge на название товара. Вычислить delta = price_new - price_old, pct_change = delta/price_old * 100. Отфильтровать изменения выше порога из .env (ALERT_THRESHOLD=5).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Telegram-алерты</strong>: батчинг — собирать все изменения за сессию, отправлять одним сообщением. Формат: «📉 Конкурент снизил цену на {product}: {old}₽ → {new}₽ (-{pct}%)». Не отправлять если нет изменений. Rate limiting: не более 1 сообщения в 5 минут.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Генерация Excel-отчёта</strong>: по завершении сессии — отчёт changes_report.xlsx с листами «Все изменения», «Подешевело», «Подорожало». Условное форматирование: красный/зелёный по знаку delta. Отправить в Telegram как документ.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Конфигурация целей парсинга</strong>: targets.json — список объектов {site_name, base_url, category_urls, selectors: {product, name, price, availability, rating}}. Селекторы вынесены из кода в конфиг — смена сайта без изменения Python-кода.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Планировщик APScheduler</strong>: запуск парсинга каждые N часов (из .env). BackgroundScheduler в отдельном потоке. Логировать время следующего запуска при старте. Поддержка ручного запуска через --run-now.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Логирование и мониторинг</strong>: логировать каждый URL (статус: ok/timeout/captcha/error), время ответа, количество спаршенных товаров. Итоговая статистика сессии: страниц обработано, товаров найдено, ошибок, время выполнения.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Работа с SQLite</strong>: альтернативное хранение через SQLite. Таблица products(id, name, site, url, price, available, parsed_at). Таблица price_history(product_id, price, parsed_at). Запросы через sqlite3 с параметризацией.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Headless режим</strong>: по умолчанию запускать Chrome headless (--headless=new в Chrome 112+). Флаг --visible для отладки с видимым браузером. В Docker всегда headless с виртуальным дисплеем через Xvfb.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Docker с Chrome</strong>: Dockerfile на базе selenium/standalone-chrome или ручная установка Chrome в python:3.12-slim. docker-compose.yml с volumes для data/ и screenshots/. CHROME_BIN и CHROMEDRIVER_PATH через env variables.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>README и этика</strong>: чёткое указание что парсить только сайты, разрешающие парсинг (books.toscrape.com, quotes.toscrape.com). Инструкция по добавлению нового сайта через targets.json. Описание всех переменных .env. Раздел «Устранение неполадок» для частых ошибок Selenium.</div></div>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📁 Структура проекта</div>
+        <div class="folder-tree">
+<span class="dir">price-monitor/</span>
+├── <span class="file">main.py</span>
+├── <span class="file">scraper.py</span>        <span class="comment"># Selenium, pagination, extraction</span>
+├── <span class="file">browser.py</span>        <span class="comment"># WebDriver setup, anti-detect</span>
+├── <span class="file">price_tracker.py</span>  <span class="comment"># pandas, delta calculation</span>
+├── <span class="file">alert_manager.py</span>  <span class="comment"># Telegram, батчинг алертов</span>
+├── <span class="file">config.py</span>
+├── <span class="file">.env</span>
+├── <span class="dir">data/</span>
+│   ├── <span class="file">latest.csv</span>
+│   └── <span class="dir">history/</span>
+├── <span class="file">requirements.txt</span>
+└── <span class="file">README.md</span>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🔧 Стек технологий</div>
+        <div class="task-tech-stack">
+          <span class="tech-chip">Python 3.12</span>
+          <span class="tech-chip">Selenium 4</span>
+          <span class="tech-chip">undetected-chromedriver</span>
+          <span class="tech-chip">BeautifulSoup4</span>
+          <span class="tech-chip">pandas</span>
+          <span class="tech-chip">APScheduler</span>
+          <span class="tech-chip">requests (Telegram)</span>
+          <span class="tech-chip">tenacity</span>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <div class="warn-box-title">⚠️ ВАЖНО: ПРАВОВЫЕ И ЭТИЧЕСКИЕ НОРМЫ</div>
+        <p style="color:var(--text-secondary);font-size:0.88rem;margin:0;">Парсинг должен соответствовать robots.txt целевого сайта. Не нагружать сервер более 1 запроса в 2-5 секунд. Использовать данные только в легальных целях. В учебных целях рекомендуется использовать сайты, специально созданные для парсинга: books.toscrape.com, quotes.toscrape.com.</p>
+      </div>
+
+      <div class="star-box">
+        <div class="star-box-title">⭐⭐⭐ ЗАДАНИЯ СО ЗВЁЗДОЧКОЙ</div>
+        <ul style="color:var(--text-secondary);font-size:0.88rem;margin:0;padding-left:18px;">
+          <li>Прокси-ротация через список SOCKS5-прокси из файла</li>
+          <li>Скриншот страницы при ошибке парсинга для отладки</li>
+          <li>Асинхронный парсинг через asyncio + aiohttp для статических страниц</li>
+          <li>SQLite для хранения истории цен вместо CSV</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ════════════════════════════════════
+         ЗАДАНИЕ 5: TELEGRAM-БОТ
+    ════════════════════════════════════ -->
+    <article class="lecture-section task-card" id="task-5">
+      <div class="task-header">
+        <div>
+          <span class="task-num-badge">ЗАДАНИЕ 05</span>
+          <div class="task-title">Telegram-бот для бизнес-уведомлений</div>
+          <div class="task-meta-row">
+            <div class="difficulty-indicator">
+              <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot hard"></div>
+              <span style="margin-left:6px;font-family:var(--font-code);font-size:0.7rem;color:#ff9999;">ADVANCED</span>
+            </div>
+            <span class="deadline-chip"><i class="fas fa-clock"></i> Дедлайн: Неделя 5</span>
+            <span class="badge">15 баллов</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <button class="btn btn-secondary" style="margin-top:6px;font-size:0.78rem;padding:6px 14px;" onclick="toggleTask(5)">○ Отметить выполненным</button>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🎯 Цель проекта</div>
+        <p style="color:var(--text-secondary);">Разработать Telegram-бота для уведомлений и управления автоматизированными задачами. Бот должен принимать команды, показывать статус скриптов, генерировать отчёты по запросу и рассылать уведомления по расписанию. Деплой на VPS через Docker.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">💼 Бизнес-кейс</div>
+        <p style="color:var(--text-secondary);">Директор компании хочет получать ключевые бизнес-метрики прямо в Telegram в любое время. Сейчас нужно заходить в 5 разных систем. Нужен бот: /report — Excel-отчёт за сегодня прямо в чат, /status — статус всех автоматизированных скриптов, /alert_on — подписка на уведомления при критических событиях.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📋 Техническое задание</div>
+        <div class="task-steps">
+          <div class="task-step"><div class="task-step-content"><strong>Регистрация бота и настройка</strong>: создать бота через @BotFather, получить TOKEN. Инициализировать Application через ApplicationBuilder. Настроить команды через bot.set_my_commands() — список отображается в меню бота.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Авторизация пользователей</strong>: middleware-декоратор @authorized проверяет update.effective_user.id против ALLOWED_USER_IDS из .env. Логировать неавторизованные попытки. Вежливый ответ неизвестным пользователям без раскрытия информации о системе.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Команда /start и /help</strong>: /start — приветствие с именем пользователя, список доступных команд, кнопки быстрого доступа InlineKeyboardMarkup. /help — подробное описание каждой команды с примерами использования.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Команда /report с периодом</strong>: /report today, /report week, /report month. Парсинг аргументов из context.args. Inline-клавиатура для выбора периода если аргумент не указан. Индикатор загрузки через bot.send_chat_action(ChatAction.UPLOAD_DOCUMENT).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Генерация и отправка Excel</strong>: вызов report_gen.py → получить bytes объект XLSX. await update.message.reply_document(document=InputFile(io.BytesIO(xlsx_bytes), filename=f'report_{date}.xlsx'), caption='Отчёт готов ✅'). Не сохранять файл на диск.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Команда /status</strong>: проверить список мониторируемых процессов из конфига. Для каждого — статус (работает/упал), время последнего запуска, количество операций за сутки. Форматировать через HTML parse_mode с эмодзи-индикаторами.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>ConversationHandler для /settings</strong>: STATE_1 — выбор параметра (период, порог алертов, расписание). STATE_2 — ввод нового значения. STATE_3 — подтверждение. FALLBACK — /cancel. Сохранение настроек в SQLite через user_id.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>SQLite для хранения данных</strong>: таблица users(id, chat_id, username, settings_json, subscribed, created_at). Таблица notifications(id, user_id, message, sent_at). Запросы через sqlite3 с context manager. Миграции через простые SQL-скрипты.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Команды /subscribe и /unsubscribe</strong>: изменить поле subscribed в SQLite. Показать текущий статус подписки и расписание уведомлений. Подтверждение через inline-кнопку «Подтвердить отписку» с callback_data.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>CallbackQueryHandler</strong>: обработчики для inline-кнопок. Паттерн callback_data: 'action:param' (например 'report:week', 'settings:threshold'). query.answer() для снятия loading-индикатора. Редактирование сообщения через query.edit_message_text().</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>APScheduler для уведомлений</strong>: BackgroundScheduler с timezone. Ежедневные сводки: утренняя в 09:00 (план на день), вечерняя в 18:00 (итоги). Загрузка расписания из БД при старте. Динамическое добавление/удаление job через API планировщика.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Форматирование сообщений</strong>: HTML parse_mode. Использовать &lt;b&gt;, &lt;i&gt;, &lt;code&gt;, &lt;pre&gt; для форматирования. Таблицы через моноширинный шрифт &lt;pre&gt;. Эмодзи как визуальные индикаторы статусов. Ограничение длины: если > 4096 символов — разбить на части.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Обработка ошибок бота</strong>: ErrorHandler через application.add_error_handler(). Логировать traceback. Отправить сообщение об ошибке пользователю (без технических деталей). Уведомить администратора (ADMIN_CHAT_ID) с полным traceback.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Команда /chart</strong>: генерировать график через matplotlib (сохранить в BytesIO). await update.message.reply_photo(photo=InputFile(buf)). Выбор типа графика через inline-клавиатуру: продажи по дням, топ категорий, динамика выручки.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Webhook-режим</strong>: конфигурировать через WEBHOOK_URL в .env. application.run_webhook() с url_path, listen, port. За nginx reverse proxy с SSL. Polling-режим как fallback для локальной разработки (AUTO_MODE=webhook/polling).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Graceful shutdown</strong>: обработчик SIGTERM сохраняет состояние активных ConversationHandler в Redis или JSON. При рестарте — восстановить состояние. application.stop() корректно закрывает все соединения.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Логирование</strong>: отдельный логгер telegram_bot с RotatingFileHandler. Логировать все входящие команды (user_id, command, args). Не логировать персональные данные. Уровень DEBUG для разработки, INFO для production.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Тесты</strong>: pytest-asyncio для тестирования async обработчиков. Mock объектов Update, Context через unittest.mock. Тестировать: авторизацию (allowed/denied), парсинг аргументов команд, форматирование сообщений, ConversationHandler transitions.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Docker-деплой</strong>: Dockerfile с python:3.12-slim, копирование только нужных файлов. docker-compose.yml: сервис bot + опциональный nginx для webhook. Volumes для SQLite и логов. restart: unless-stopped. Healthcheck: проверить что бот отвечает на getMe API.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>README и инструкция деплоя</strong>: создание бота через BotFather пошагово, настройка .env, Quick Start локально, инструкция деплоя на VPS (Hetzner/DigitalOcean), настройка nginx для webhook, мониторинг через docker logs.</div></div>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📁 Структура проекта</div>
+        <div class="folder-tree">
+<span class="dir">telegram-business-bot/</span>
+├── <span class="file">main.py</span>            <span class="comment"># Application setup, handlers registration</span>
+├── <span class="dir">handlers/</span>
+│   ├── <span class="file">commands.py</span>    <span class="comment"># /start, /help, /report handlers</span>
+│   ├── <span class="file">conversations.py</span> <span class="comment"># ConversationHandler</span>
+│   └── <span class="file">callbacks.py</span>   <span class="comment"># InlineKeyboard callback handlers</span>
+├── <span class="file">scheduler.py</span>       <span class="comment"># APScheduler, job definitions</span>
+├── <span class="file">report_gen.py</span>      <span class="comment"># Excel/text report generation</span>
+├── <span class="file">auth.py</span>            <span class="comment"># User whitelist check</span>
+├── <span class="file">config.py</span>
+├── <span class="file">.env</span>               <span class="comment"># BOT_TOKEN, ALLOWED_USER_IDS</span>
+├── <span class="file">Dockerfile</span>
+├── <span class="file">docker-compose.yml</span>
+└── <span class="file">README.md</span>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🔧 Стек технологий</div>
+        <div class="task-tech-stack">
+          <span class="tech-chip">Python 3.12</span>
+          <span class="tech-chip">python-telegram-bot v20+</span>
+          <span class="tech-chip">APScheduler</span>
+          <span class="tech-chip">openpyxl / pandas</span>
+          <span class="tech-chip">Docker</span>
+          <span class="tech-chip">python-dotenv</span>
+          <span class="tech-chip">logging</span>
+        </div>
+      </div>
+
+      <div class="star-box">
+        <div class="star-box-title">⭐⭐⭐ ЗАДАНИЯ СО ЗВЁЗДОЧКОЙ</div>
+        <ul style="color:var(--text-secondary);font-size:0.88rem;margin:0;padding-left:18px;">
+          <li>Webhook-режим вместо polling: nginx + SSL сертификат Let's Encrypt</li>
+          <li>Inline-режим: поиск данных прямо в любом чате через @botname запрос</li>
+          <li>SQLite база для хранения настроек пользователей между перезапусками</li>
+          <li>Команда /chart — отправка графика как изображения через matplotlib</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ════════════════════════════════════
+         ЗАДАНИЕ 6: EMAIL-РАССЫЛКА
+    ════════════════════════════════════ -->
+    <article class="lecture-section task-card" id="task-6">
+      <div class="task-header">
+        <div>
+          <span class="task-num-badge">ЗАДАНИЕ 06</span>
+          <div class="task-title">Автоматическая отправка email-отчётов</div>
+          <div class="task-meta-row">
+            <div class="difficulty-indicator">
+              <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot"></div>
+              <span style="margin-left:6px;font-family:var(--font-code);font-size:0.7rem;color:var(--text-muted);">INTERMEDIATE</span>
+            </div>
+            <span class="deadline-chip"><i class="fas fa-clock"></i> Дедлайн: Неделя 5</span>
+            <span class="badge">10 баллов</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <button class="btn btn-secondary" style="margin-top:6px;font-size:0.78rem;padding:6px 14px;" onclick="toggleTask(6)">○ Отметить выполненным</button>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🎯 Цель проекта</div>
+        <p style="color:var(--text-secondary);">Создать корпоративную систему автоматической email-рассылки с HTML-шаблонами, персонализацией, вложениями, отслеживанием ошибок доставки и расписанием отправки. Система должна поддерживать список рассылки из Excel/CSV и батчинг для соблюдения лимитов SMTP-провайдера.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📋 Техническое задание</div>
+        <div class="task-steps">
+          <div class="task-step"><div class="task-step-content"><strong>Структура проекта</strong>: модули mailer.py, template_engine.py, contact_list.py, scheduler.py, delivery_tracker.py, config.py. Типизация через dataclasses: EmailRecipient, EmailConfig, DeliveryResult.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Конфигурация SMTP</strong>: .env с SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, USE_TLS (True/False), SENDER_NAME, SENDER_EMAIL. Поддержка профилей: gmail, yandex, mailru, custom — автонастройка параметров по имени профиля.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Загрузка списка рассылки</strong>: pandas читает CSV или Excel. Обязательные колонки: email, name. Опциональные: company, position, custom_field_1..N для персонализации. Дедупликация по email. Подсчёт и логирование дубликатов.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Валидация email-адресов</strong>: regex-паттерн для базовой валидации формата. Опционально — DNS-проверка MX-записей через dnspython для проверки существования домена. Сохранить невалидные в invalid_emails.csv с причиной.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Список отписавшихся</strong>: unsubscribe_list.csv с email и датой отписки. При загрузке списка рассылки — фильтровать отписавшихся. Логировать количество отфильтрованных. Добавление в unsubscribe через команду --unsubscribe EMAIL.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Jinja2 HTML-шаблоны</strong>: шаблон templates/email.html с переменными {{ name }}, {{ company }}, {{ custom_data }}. Поддержка условных блоков {% if position %} ... {% endif %}. Наследование от базового шаблона base.html с хедером и футером.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Inline CSS для email-клиентов</strong>: inlining CSS через premailer или cssutils (Gmail и Outlook не поддерживают внешние стили). Тестирование отображения в нескольких клиентах. Responsive layout через table-based вёрстку для поддержки Outlook.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Построение MIME-сообщения</strong>: MIMEMultipart('alternative') для text/plain + text/html. MIMEMultipart('mixed') для добавления вложений. MIMEApplication для XLSX/PDF вложений. Корректная кодировка через charset=utf-8.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Персональные вложения</strong>: опциональный столбец attachment_path в списке рассылки. Для каждого получателя прикрепить его личный файл (например, персональный отчёт). Проверить существование файла перед отправкой.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Батчинг и rate limiting</strong>: BATCH_SIZE (из .env) — количество писем в пачке. BATCH_DELAY_SECONDS — пауза между пачками. Внутри пачки: задержка random(0.5, 2) между письмами. Не превышать лимиты провайдера (Gmail: 500/день, 100/час).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Retry для неудавшихся отправок</strong>: при SMTPException — повторить 3 раза с задержкой 5s. После 3 неудач — добавить в failed_queue.csv. Команда --retry-failed перечитывает failed_queue и пробует повторно.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Трекинг отправки</strong>: delivery_log.csv с колонками: email, status (sent/failed/skipped), timestamp, error_message, smtp_response_code. Обновляется в реальном времени во время рассылки. Не перезаписывать — append mode.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Трекинг открытий (pixel tracking)</strong>: встроить img src="https://your-server.com/track/{{ tracking_id }}.gif" в HTML-шаблон. Простой Flask endpoint логирует открытие. Опционально: SQLite для хранения открытий по tracking_id → email.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Unsubscribe ссылка</strong>: в шаблоне — ссылка «Отписаться» с уникальным токеном. Flask endpoint /unsubscribe/&lt;token&gt; добавляет email в unsubscribe_list.csv. Простая страница подтверждения отписки.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Итоговый отчёт доставки</strong>: summary.txt и summary.xlsx — статистика: всего отправлено, успешно, ошибок, пропущено (unsubscribed/invalid). Группировка ошибок по типам. Отправить summary на ADMIN_EMAIL по завершении рассылки.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Dry-run режим</strong>: --dry-run — вывести список получателей и превью письма без реальной отправки. Показать отрендеренный HTML первого письма в браузере (webbrowser.open). Подсчитать время рассылки с учётом батчинга.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Планировщик рассылки</strong>: schedule library — запустить рассылку в указанное время (SEND_AT из .env). Поддержка отложенного старта. Команда --now для немедленного запуска. Проверка расписания через --schedule-info.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Прогресс в реальном времени</strong>: rich.progress или tqdm — прогресс-бар с: количество отправленных / всего, скорость (писем/мин), ожидаемое время до конца, последний отправленный email. Обновление каждую секунду.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Тесты</strong>: pytest с MockSMTP. Тестировать: валидацию email, фильтрацию unsubscribed, рендеринг шаблона, формирование MIME, батчинг (проверить что паузы соблюдаются через mock time). Coverage > 65%.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>README</strong>: схема CSV-файла с примером данных, инструкция по настройке Gmail App Password, примеры использования всех CLI-флагов, описание Jinja2 переменных шаблона, FAQ по частым ошибкам SMTP.</div></div>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🔧 Стек технологий</div>
+        <div class="task-tech-stack">
+          <span class="tech-chip">Python 3.12</span>
+          <span class="tech-chip">smtplib</span>
+          <span class="tech-chip">email.mime</span>
+          <span class="tech-chip">Jinja2</span>
+          <span class="tech-chip">pandas</span>
+          <span class="tech-chip">python-dotenv</span>
+          <span class="tech-chip">schedule</span>
+        </div>
+      </div>
+
+      <div class="star-box">
+        <div class="star-box-title">⭐⭐ ЗАДАНИЯ СО ЗВЁЗДОЧКОЙ</div>
+        <ul style="color:var(--text-secondary);font-size:0.88rem;margin:0;padding-left:18px;">
+          <li>Трекинг открытий писем через pixel-tracking (встроенный 1×1 пиксель)</li>
+          <li>Unsubscribe ссылка в каждом письме с обработкой запроса через Flask</li>
+          <li>Поддержка SendGrid / Mailgun API вместо прямого SMTP</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ════════════════════════════════════
+         ЗАДАНИЕ 7: EXE-ПРОГРАММА
+    ════════════════════════════════════ -->
+    <article class="lecture-section task-card" id="task-7">
+      <div class="task-header">
+        <div>
+          <span class="task-num-badge">ЗАДАНИЕ 07</span>
+          <div class="task-title">Создание standalone .exe-программы</div>
+          <div class="task-meta-row">
+            <div class="difficulty-indicator">
+              <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot"></div>
+              <span style="margin-left:6px;font-family:var(--font-code);font-size:0.7rem;color:var(--text-muted);">INTERMEDIATE</span>
+            </div>
+            <span class="deadline-chip"><i class="fas fa-clock"></i> Дедлайн: Неделя 6</span>
+            <span class="badge">10 баллов</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <button class="btn btn-secondary" style="margin-top:6px;font-size:0.78rem;padding:6px 14px;" onclick="toggleTask(7)">○ Отметить выполненным</button>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🎯 Цель проекта</div>
+        <p style="color:var(--text-secondary);">Упаковать один из предыдущих скриптов (задание 1, 2 или 3 на выбор) в standalone Windows .exe приложение с GUI-интерфейсом через tkinter, иконкой, настройками через INI-файл и автозапуском через реестр Windows.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📋 Техническое задание</div>
+        <div class="task-steps">
+          <div class="task-step"><div class="task-step-content"><strong>Выбор базового скрипта</strong>: взять один из заданий 1, 2 или 3. Рефакторинг для GUI: разделить логику (business logic) и UI слои. Логика не должна зависеть от tkinter — тестируемая независимо.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Главное окно tkinter</strong>: Tk() с заданным размером и минимальным размером. Иконка окна через iconbitmap(). Заголовок с версией приложения. Обработка закрытия окна через protocol('WM_DELETE_WINDOW') — корректная остановка фоновых потоков.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Макет интерфейса</strong>: ttk.Notebook с вкладками (Управление, Настройки, Логи). Использовать ttk для современного вида (ttk.Button, ttk.Entry, ttk.Combobox). Frame с grid layout для выравнивания элементов. Адаптивная растяжка через columnconfigure/rowconfigure.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Панель управления</strong>: кнопки «Запустить», «Остановить», «Пауза». StringVar для статуса («Ожидание», «Работает», «Ошибка»). Label с цветным индикатором статуса. ProgressBar (ttk.Progressbar) для отображения прогресса операции.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Лог-панель</strong>: ScrolledText (readonly) для отображения логов в реальном времени. Цветовая кодировка: ERROR красным, WARNING жёлтым, INFO белым через tag_configure. Кнопка «Очистить лог». Автоскролл к последней строке.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Вкладка Настройки</strong>: поля ввода для всех параметров конфига. ttk.Entry для строковых значений, ttk.Spinbox для числовых, ttk.Checkbutton для bool. Кнопки «Сохранить» и «Сбросить к умолчаниям». Валидация при сохранении с подсветкой ошибочных полей.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Хранение настроек в INI</strong>: configparser сохраняет в app_config.ini рядом с .exe. Секции: [General], [Paths], [Network], [Notifications]. Загрузка при старте с fallback на DEFAULT значения. Кнопка «Открыть папку с конфигом» через os.startfile.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Фоновые потоки</strong>: вся бизнес-логика в threading.Thread(daemon=True). Остановка через threading.Event(). Передача результатов в GUI через Queue + root.after(100, check_queue). Запрет запуска если поток уже работает (кнопка disabled).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>System Tray через pystray</strong>: Icon в трее с меню (Открыть, Запустить/Стоп, Выход). При закрытии главного окна — сворачивать в трей, не завершать. Уведомления через plyer.notification или Windows Toast при завершении задачи.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Диалоги выбора файлов</strong>: filedialog.askdirectory() для выбора папки, askopenfilename() для файлов. Валидировать выбранные пути. Отображать короткую версию пути (последние N символов) если слишком длинный.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Иконка приложения</strong>: создать app.ico (16x16, 32x32, 48x48 в одном файле) через Pillow или онлайн-конвертер. Использовать в заголовке окна, трее, и как иконку .exe через PyInstaller --icon параметр.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>PyInstaller spec-файл</strong>: создать app.spec вместо команды в командной строке. Указать: a.datas для включения шаблонов/иконок, hiddenimports для неочевидных зависимостей, excludes для уменьшения размера. Проверить размер .exe — цель < 50MB.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Включение ресурсов</strong>: sys._MEIPASS для доступа к bundled-файлам при запуске из .exe. Функция resource_path(relative_path) → абсолютный путь (работает и в dev, и в .exe). Проверить что templates/, icons/, config/ доступны.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Автозапуск с Windows</strong>: функция toggle_autostart(enable: bool). winreg.OpenKey(HKEY_CURRENT_USER, Run). SetValueEx при включении, DeleteValue при выключении. Checkbox в настройках для управления. Показывать текущий статус при старте.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Обработка ошибок в GUI</strong>: messagebox.showerror() для критических ошибок. Не давать приложению упасть с uncaught exception — sys.excepthook перехватывает и показывает диалог с копированием traceback. Кнопка «Отправить отчёт об ошибке» (копировать в clipboard).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Логирование в файл</strong>: RotatingFileHandler в %APPDATA%/AppName/logs/. Отображать путь к логам в настройках. Кнопка «Открыть лог-файл» через os.startfile. Уровень логирования — переключатель в настройках (DEBUG/INFO/WARNING).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>О программе</strong>: диалог Help → About с: иконка, название, версия, Python-версия, список библиотек. Ссылка на GitHub. Кнопка «Проверить обновления» (заглушка или реальный запрос к GitHub Releases API).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Тестирование .exe</strong>: запустить собранный .exe на чистой виртуальной машине без Python. Проверить все функции: настройки сохраняются, логи пишутся, трей работает, автозапуск регистрируется. Задокументировать тест-кейсы в README.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>NSIS installer (опционально)</strong>: установщик installer.nsi — выбор директории, ярлык на рабочем столе, запись в реестр Add/Remove Programs, деинсталлятор. Сборка через makensis. Readme по установке.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>README и документация</strong>: скриншоты интерфейса, инструкция по сборке .exe (шаг за шагом), описание всех настроек, раздел для конечного пользователя (не программиста) по установке и использованию, известные ограничения и обходные решения.</div></div>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🔧 Стек технологий</div>
+        <div class="task-tech-stack">
+          <span class="tech-chip">Python 3.12</span>
+          <span class="tech-chip">tkinter</span>
+          <span class="tech-chip">PyInstaller</span>
+          <span class="tech-chip">pystray</span>
+          <span class="tech-chip">configparser</span>
+          <span class="tech-chip">winreg</span>
+          <span class="tech-chip">threading</span>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <div class="warn-box-title">⚠️ ВАЖНЫЕ НЮАНСЫ PYINSTALLER</div>
+        <ul style="color:var(--text-secondary);font-size:0.88rem;margin:0;padding-left:18px;">
+          <li>Antivirus может ложно срабатывать на .exe — нормально для PyInstaller. Добавь README с объяснением.</li>
+          <li>Путь к ресурсам через sys._MEIPASS при --onefile, а не __file__</li>
+          <li>Все hidden imports нужно явно указывать: --hidden-import=pkg_resources.py2_warn</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ════════════════════════════════════
+         ДИПЛОМНЫЙ ПРОЕКТ
+    ════════════════════════════════════ -->
+    <article class="lecture-section task-card diploma" id="task-8">
+      <div class="task-header">
+        <div>
+          <span class="task-num-badge diploma">🏆 ДИПЛОМНЫЙ ПРОЕКТ</span>
+          <div class="task-title" style="color:var(--accent-green);">Полная система автоматизации бизнес-процесса</div>
+          <div class="task-meta-row">
+            <div class="difficulty-indicator">
+              <div class="diff-dot hard"></div><div class="diff-dot hard"></div><div class="diff-dot hard"></div><div class="diff-dot hard"></div>
+              <span style="margin-left:6px;font-family:var(--font-code);font-size:0.7rem;color:#ff9999;">PRODUCTION LEVEL</span>
+            </div>
+            <span class="deadline-chip"><i class="fas fa-clock"></i> Дедлайн: Неделя 8</span>
+            <span class="badge gold">24 балла</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <button class="btn btn-primary" style="margin-top:6px;font-size:0.78rem;padding:6px 14px;" onclick="toggleTask(8)">○ Отметить выполненным</button>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🎯 Цель проекта</div>
+        <p style="color:var(--text-secondary);">Спроектировать и реализовать комплексную систему автоматизации бизнес-процесса, которая объединяет все технологии курса в единый production-ready продукт. Проект должен решать реальную бизнес-задачу, быть задеплоен на VPS и работать в режиме 24/7.</p>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">💼 Варианты бизнес-кейса (выбрать один)</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:12px 0;">
+          <div class="tip-box">
+            <div class="tip-box-title">ВАРИАНТ A — E-commerce</div>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">Мониторинг цен конкурентов → ежедневный Excel-отчёт → Telegram-алерты при изменении цены → email-рассылка менеджерам</p>
+          </div>
+          <div class="tip-box" style="border-color:var(--accent-cyan);background:rgba(0,212,255,0.05);">
+            <div class="tip-box-title" style="color:var(--accent-cyan);">ВАРИАНТ B — HR-автоматизация</div>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">Мониторинг email на резюме → извлечение данных → заполнение Excel-базы → Telegram-уведомление HR → еженедельный отчёт</p>
+          </div>
+          <div class="tip-box" style="border-color:var(--accent-purple);background:rgba(123,47,255,0.05);">
+            <div class="tip-box-title" style="color:var(--accent-purple);">ВАРИАНТ C — Финансы</div>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">Скачивание банковских выписок → парсинг → аналитика в pandas → Excel-отчёт → Telegram-дашборд для директора</p>
+          </div>
+          <div class="tip-box" style="border-color:#ffd700;background:rgba(255,215,0,0.04);">
+            <div class="tip-box-title" style="color:#ffd700;">ВАРИАНТ D — Свой кейс</div>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">Реализовать свой кейс. Необходимо использовать минимум 4 технологии курса и обосновать бизнес-ценность решения.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📋 Обязательные компоненты системы</div>
+        <div class="task-steps">
+          <div class="task-step"><div class="task-step-content"><strong>Архитектурное проектирование</strong>: до написания кода — создать architecture.md с описанием компонентов, потоков данных (data flow diagram), выбором технологий и обоснованием. Diagramm через Mermaid или DrawIO. Согласование с ТЗ перед началом реализации.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Структура пакета src/</strong>: Python-пакет с __init__.py. Модули: collector.py, processor.py, reporter.py, notifier.py, scheduler.py, config.py, exceptions.py. Каждый модуль — единая ответственность. Circular imports не допускаются.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Кастомные исключения</strong>: иерархия в exceptions.py: BaseAppError → CollectorError, ProcessorError, ReporterError, NotifierError. Каждое исключение содержит context (что произошло) и suggestion (что делать). Логировать с уровнем ERROR при возникновении.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Сбор данных с retry</strong>: collector.py с декоратором @retry(tenacity). Логировать каждый запрос: URL, статус, время ответа. Кеширование сырых данных в data/raw/ — при повторном запуске не скачивать если файл свежее N минут. Параметр --force-refresh.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Обработка данных через pandas</strong>: processor.py — pipeline функций: load() → validate() → clean() → transform() → aggregate(). Каждая функция принимает и возвращает DataFrame. Логировать размер DataFrame на каждом шаге. Тест на пустой DataFrame.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Валидация данных</strong>: Pydantic модели для входящих данных или ручная валидация через assert. Проверить: обязательные поля, типы данных, диапазоны значений, отсутствие дубликатов по ключевым полям. При ошибке валидации — детальное сообщение что именно не так.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Генерация Excel-отчёта</strong>: reporter.py — многолистовой XLSX с KPI-дашбордом, детальными данными, диаграммами. Условное форматирование. Именование файла с timestamp. Сохранение в output/ с ротацией (хранить 30 последних).</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Telegram-бот интеграция</strong>: notifier.py — команды /report (отправить последний XLSX в чат), /status (статус всех компонентов), /run (ручной запуск pipeline). Авторизация через whitelist. Логировать все команды с user_id.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Email-рассылка итогов</strong>: отправка Excel-отчёта на список recipients из .env. HTML-тело с краткой сводкой KPI через Jinja2. Не падать если SMTP недоступен — залогировать и отправить Telegram-алерт вместо email.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Планировщик APScheduler</strong>: scheduler.py — основной pipeline по расписанию (CRON-выражение из .env). Отдельные задания для очистки старых файлов, проверки здоровья компонентов. Persistence через SQLAlchemyJobStore для восстановления после рестарта.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Health check</strong>: endpoint или проверочный скрипт health_check.py — тестирует доступность всех внешних зависимостей (API, SMTP, Telegram). Возвращает JSON с статусом каждого компонента. Используется Docker HEALTHCHECK.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Comprehensive logging</strong>: structlog или стандартный logging с JSON-форматом для production. Ротирующие файлы с разными уровнями: app.log (INFO+), errors.log (ERROR+), debug.log (DEBUG, только в dev). Логировать start/end каждого pipeline с duration.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Конфигурация через Pydantic Settings</strong>: class Settings(BaseSettings) — автоматическая загрузка из .env с валидацией. Вложенные конфиги для каждого компонента. settings.py как единая точка конфигурации. .env.example с описанием каждой переменной.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Pytest тесты</strong>: тесты для collector (mock HTTP), processor (fixture DataFrames), reporter (проверить что XLSX создаётся и открывается), scheduler (mock time). Integration test для полного pipeline end-to-end с mock внешних зависимостей. Coverage > 60%.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>docker-compose.yml</strong>: сервис app (основное приложение), опциональный bot (Telegram-бот как отдельный процесс). Volumes: ./data:/app/data, ./logs:/app/logs. env_file: .env. restart: always. depends_on для порядка запуска.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>GitHub Actions CI/CD</strong>: workflow ci.yml — запуск pytest + flake8 + mypy на каждый push. workflow deploy.yml — при merge в main: SSH на VPS, git pull, docker-compose up -d --build. Secrets в GitHub Actions для SSH-ключа и .env переменных.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Деплой на VPS</strong>: пошаговый деплой на чистый Ubuntu-сервер. Установка Docker + docker-compose. Клонирование репозитория. Настройка .env. Запуск через docker-compose. Проверка health check. Настройка logrotate для лог-файлов.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Мониторинг работоспособности</strong>: cron-задание каждые 5 минут проверяет что контейнер работает и pipeline выполнился в ожидаемое время. При проблеме — отправить Telegram-алерт. Хранить метрику last_successful_run в файле/SQLite.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>README.md</strong>: описание бизнес-ценности (что автоматизирует и сколько времени экономит), архитектурная схема, Quick Start за 10 минут, полная инструкция деплоя на VPS, описание всех переменных .env, API/команды бота, troubleshooting FAQ.</div></div>
+          <div class="task-step"><div class="task-step-content"><strong>Финальная презентация</strong>: PRESENTATION.md или слайды с описанием: проблема → решение → архитектура → демонстрация → результаты (сколько времени/денег экономит) → дальнейшее развитие. Код-ревью по чеклисту production-ready.</div></div>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🏗️ Архитектура системы</div>
+        <div class="folder-tree">
+<span class="dir">diploma-project/</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="file">__init__.py</span>
+│   ├── <span class="file">collector.py</span>      <span class="comment"># Data collection: web/API/file</span>
+│   ├── <span class="file">processor.py</span>      <span class="comment"># pandas: clean, transform, aggregate</span>
+│   ├── <span class="file">reporter.py</span>       <span class="comment"># Excel generation, openpyxl</span>
+│   ├── <span class="file">notifier.py</span>       <span class="comment"># Telegram bot, email sender</span>
+│   ├── <span class="file">scheduler.py</span>      <span class="comment"># APScheduler job definitions</span>
+│   └── <span class="file">config.py</span>         <span class="comment"># Pydantic settings / dotenv</span>
+├── <span class="file">main.py</span>               <span class="comment"># Entry point, graceful shutdown</span>
+├── <span class="file">.env</span>
+├── <span class="file">.env.example</span>
+├── <span class="file">requirements.txt</span>      <span class="comment"># Pinned versions</span>
+├── <span class="file">Dockerfile</span>
+├── <span class="file">docker-compose.yml</span>
+├── <span class="dir">.github/workflows/</span>
+│   └── <span class="file">deploy.yml</span>        <span class="comment"># GitHub Actions CI/CD</span>
+├── <span class="dir">tests/</span>
+│   ├── <span class="file">test_collector.py</span>
+│   ├── <span class="file">test_processor.py</span>
+│   └── <span class="file">conftest.py</span>
+├── <span class="dir">docs/</span>
+│   ├── <span class="file">architecture.md</span>   <span class="comment"># Архитектурная схема</span>
+│   ├── <span class="file">deployment.md</span>     <span class="comment"># Инструкция деплоя</span>
+│   └── <span class="file">api.md</span>            <span class="comment"># Описание команд бота</span>
+└── <span class="file">README.md</span>             <span class="comment"># Главная документация</span>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">🔧 Полный стек технологий</div>
+        <div class="task-tech-stack">
+          <span class="tech-chip">Python 3.12</span>
+          <span class="tech-chip">pandas 2.x</span>
+          <span class="tech-chip">openpyxl</span>
+          <span class="tech-chip">Selenium / requests</span>
+          <span class="tech-chip">python-telegram-bot</span>
+          <span class="tech-chip">smtplib / Jinja2</span>
+          <span class="tech-chip">APScheduler</span>
+          <span class="tech-chip">tenacity</span>
+          <span class="tech-chip">Docker + compose</span>
+          <span class="tech-chip">GitHub Actions</span>
+          <span class="tech-chip">pydantic-settings</span>
+          <span class="tech-chip">pytest</span>
+          <span class="tech-chip">logging</span>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">✅ Production Checklist</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
+          <div>
+            <div style="font-family:var(--font-code);font-size:0.7rem;color:var(--accent-green);margin-bottom:8px;">CODE QUALITY</div>
+            <ul class="checklist">
+              <li>Type hints на всех публичных функциях</li>
+              <li>Docstrings на всех модулях и классах</li>
+              <li>Нет magic numbers — только constants</li>
+              <li>Максимальная длина функции 30 строк</li>
+              <li>ruff/flake8 проходит без ошибок</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-family:var(--font-code);font-size:0.7rem;color:var(--accent-cyan);margin-bottom:8px;">RELIABILITY</div>
+            <ul class="checklist">
+              <li>Все исключения логируются с traceback</li>
+              <li>Retry-логика для сетевых операций</li>
+              <li>Нет `except: pass` в коде</li>
+              <li>Graceful shutdown по SIGTERM</li>
+              <li>Health check endpoint или ping</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-family:var(--font-code);font-size:0.7rem;color:var(--accent-purple);margin-bottom:8px;">DEPLOYMENT</div>
+            <ul class="checklist">
+              <li>docker-compose up запускает без ошибок</li>
+              <li>Все secrets в .env, не в коде</li>
+              <li>Логи смонтированы как volume</li>
+              <li>--restart always в docker-compose</li>
+              <li>GitHub Actions деплой работает</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-family:var(--font-code);font-size:0.7rem;color:#ffd700;margin-bottom:8px;">DOCUMENTATION</div>
+            <ul class="checklist">
+              <li>README с Quick Start за 5 минут</li>
+              <li>Архитектурная схема (Mermaid/DrawIO)</li>
+              <li>Deployment guide для VPS</li>
+              <li>.env.example с комментариями</li>
+              <li>CHANGELOG с историей изменений</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-section">
+        <div class="task-section-title">📊 Критерии оценки дипломного проекта</div>
+        <table class="grading-table">
+          <thead><tr><th>Критерий</th><th>Баллы</th><th>Описание</th></tr></thead>
+          <tbody>
+            <tr><td>Функциональность</td><td>6</td><td>Все компоненты работают, pipeline выполняется end-to-end</td></tr>
+            <tr><td>Архитектура</td><td>4</td><td>Разделение ответственности, SOLID, DRY, нет God-objects</td></tr>
+            <tr><td>Надёжность</td><td>4</td><td>Retry, logging, error handling, graceful shutdown</td></tr>
+            <tr><td>Docker-деплой</td><td>3</td><td>docker-compose up работает, restart-политика, volumes</td></tr>
+            <tr><td>CI/CD</td><td>3</td><td>GitHub Actions: тесты + линтинг + деплой</td></tr>
+            <tr><td>Документация</td><td>2</td><td>README, architecture.md, deployment.md</td></tr>
+            <tr><td>Тесты</td><td>2</td><td>Pytest для ключевых функций, coverage > 60%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="star-box">
+        <div class="star-box-title">⭐⭐⭐⭐ MIDDLE-LEVEL EXTENSIONS</div>
+        <ul style="color:var(--text-secondary);font-size:0.88rem;margin:0;padding-left:18px;">
+          <li>Prometheus + Grafana для мониторинга метрик системы</li>
+          <li>Celery + Redis для асинхронных задач</li>
+          <li>PostgreSQL для хранения исторических данных</li>
+          <li>REST API на FastAPI для управления системой</li>
+          <li>Sentry для трекинга ошибок в production</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:28px;text-align:center;">
+        <a href="lectures.html" class="btn btn-secondary" style="margin-right:12px;">
+          <i class="fas fa-book"></i> Вернуться к лекциям
+        </a>
+        <a href="exam.html" class="btn btn-primary">
+          <i class="fas fa-graduation-cap"></i> Сдать итоговый экзамен →
+        </a>
+      </div>
+    </article>
+
+  </main>
+</div>
+
+<!-- Progress Widget -->
+<div class="progress-widget">
+  <div class="pw-label">ПРОГРЕСС</div>
+  <div class="pw-bar-wrap"><div class="pw-bar" style="width:0%"></div></div>
+  <div class="pw-text">0% изучено</div>
+</div>
+
+<style>
+.pt-task-item { display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:color 0.2s; }
+.pt-task-item:hover span:first-child { color:var(--accent-green) !important; }
+.pt-task-item.done span:first-child { color:var(--accent-green) !important; }
+</style>
+
+<script src="script.js"></script>
+<script>
+/* ── Practice Page: Task Completion Tracking ── */
+(function() {
+  const STORAGE_KEY = 'pyauto_practice_tasks';
+
+  function loadTasks() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+  }
+  function saveTasks(data) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+  }
+  function updateUI() {
+    const tasks = loadTasks();
+    let done = 0;
+    for (let i = 1; i <= 8; i++) {
+      const el = document.getElementById('task-status-' + i);
+      const item = document.querySelector('[data-task="' + i + '"]');
+      if (tasks[i]) {
+        done++;
+        if (el) { el.textContent = '✓ выполнено'; el.style.color = 'var(--accent-green)'; }
+        if (item) item.classList.add('done');
+      } else {
+        if (el) { el.textContent = '○ не начато'; el.style.color = ''; }
+        if (item) item.classList.remove('done');
+      }
+    }
+    const frac = document.getElementById('progress-fraction');
+    const bar = document.getElementById('overall-progress-bar');
+    if (frac) frac.textContent = done + ' / 8';
+    if (bar) bar.style.width = (done / 8 * 100) + '%';
+
+    // Update buttons
+    for (let i = 1; i <= 8; i++) {
+      const btn = document.querySelector('.task-card[id="task-' + i + '"] button[onclick="toggleTask(' + i + ')"]');
+      if (btn) {
+        btn.textContent = tasks[i] ? '✓ Выполнено' : '○ Отметить выполненным';
+        btn.style.color = tasks[i] ? 'var(--accent-green)' : '';
+        btn.style.borderColor = tasks[i] ? 'var(--accent-green)' : '';
+      }
+    }
+  }
+
+  window.toggleTask = function(id) {
+    const tasks = loadTasks();
+    tasks[id] = !tasks[id];
+    saveTasks(tasks);
+    updateUI();
+    // Toast
+    showToast(tasks[id] ? '✓ Задание ' + id + ' отмечено выполненным!' : 'Задание ' + id + ' снято с выполненных');
+  };
+
+  updateUI();
+})();
+</script>
+</body>
+</html>

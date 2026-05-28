@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyAuto — Итоговый Экзамен</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23050a0f'/><text x='4' y='24' font-size='22'>🎓</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary: #050a0f;
+      --bg-secondary: #0a1220;
+      --bg-card: rgba(10,18,32,0.9);
+      --accent-green: #00ff88;
+      --accent-cyan: #00d4ff;
+      --accent-purple: #7b2fff;
+      --accent-yellow: #ffd60a;
+      --accent-red: #ff3366;
+      --text-primary: #e8f4f8;
+      --text-secondary: #8ba3b8;
+      --text-muted: #4a6070;
+      --border-dim: rgba(0,255,136,0.12);
+      --border-bright: rgba(0,255,136,0.45);
+      --glow-green: 0 0 20px rgba(0,255,136,0.4);
+      --glow-purple: 0 0 20px rgba(123,47,255,0.4);
+      --font-display: 'Orbitron', monospace;
+      --font-body: 'Inter', sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+      --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px;
+      --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); overflow-x: hidden; line-height: 1.7; }
+    ::selection { background: rgba(123,47,255,0.25); color: var(--accent-purple); }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--accent-purple); border-radius: 3px; }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(5,10,15,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(123,47,255,0.2);
+      padding: 0 clamp(16px,4vw,48px); height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--accent-green); text-decoration: none; letter-spacing: 2px; }
+    .nav-back { font-family: var(--font-code); font-size: 0.8rem; color: var(--text-secondary); text-decoration: none; padding: 6px 16px; border: 1px solid var(--border-dim); border-radius: var(--radius-sm); transition: var(--transition); }
+    .nav-back:hover { color: var(--accent-green); border-color: var(--accent-green); }
+    .nav-progress { position: absolute; bottom: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); transition: width 0.2s; }
+
+    /* ── Hero ── */
+    .exam-hero {
+      padding: 100px clamp(16px,6vw,80px) 60px;
+      text-align: center;
+      position: relative;
+      background: radial-gradient(ellipse at 50% 0%, rgba(123,47,255,0.15) 0%, transparent 65%);
+    }
+    .exam-hero-label { font-family: var(--font-code); font-size: 0.72rem; color: var(--accent-purple); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+    .exam-hero-title { font-family: var(--font-display); font-size: clamp(1.8rem,5vw,3.5rem); font-weight: 900; color: var(--text-primary); line-height: 1.15; margin-bottom: 20px; }
+    .exam-hero-title span { color: var(--accent-purple); text-shadow: var(--glow-purple); }
+    .exam-hero-desc { font-size: 1.05rem; color: var(--text-secondary); max-width: 680px; margin: 0 auto 36px; line-height: 1.8; }
+    .exam-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-bottom: 40px; }
+    .exam-meta-item { font-family: var(--font-code); font-size: 0.75rem; background: var(--bg-card); border: 1px solid rgba(123,47,255,0.25); border-radius: var(--radius-sm); padding: 8px 18px; color: var(--accent-purple); letter-spacing: 1px; }
+    .btn-start { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--accent-purple), #a855f7); color: #fff; font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; padding: 16px 44px; border-radius: var(--radius-md); border: none; cursor: pointer; transition: var(--transition); box-shadow: 0 0 30px rgba(123,47,255,0.35); text-decoration: none; }
+    .btn-start:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(123,47,255,0.55); }
+
+    /* ── Progress Bar ── */
+    .exam-progress-wrap {
+      position: sticky; top: 64px; z-index: 100;
+      background: rgba(5,10,15,0.97); backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(123,47,255,0.15);
+      padding: 12px clamp(16px,4vw,48px);
+      display: none; align-items: center; gap: 16px;
+    }
+    .exam-progress-wrap.visible { display: flex; }
+    .exam-progress-label { font-family: var(--font-code); font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; }
+    .exam-progress-bar { flex: 1; height: 6px; background: rgba(123,47,255,0.15); border-radius: 3px; overflow: hidden; }
+    .exam-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); border-radius: 3px; transition: width 0.3s; width: 0%; }
+    .exam-progress-count { font-family: var(--font-code); font-size: 0.72rem; color: var(--accent-purple); white-space: nowrap; }
+
+    /* ── Exam Container ── */
+    .exam-container { max-width: 900px; margin: 0 auto; padding: 40px clamp(16px,4vw,48px) 80px; display: none; }
+    .exam-container.visible { display: block; }
+
+    /* ── Section Divider ── */
+    .section-divider {
+      margin: 48px 0 36px;
+      padding: 20px 28px;
+      background: var(--bg-card);
+      border: 1px solid rgba(123,47,255,0.25);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--accent-purple);
+    }
+    .section-divider h2 { font-family: var(--font-display); font-size: 1rem; color: var(--accent-purple); letter-spacing: 2px; margin-bottom: 6px; }
+    .section-divider p { font-family: var(--font-code); font-size: 0.78rem; color: var(--text-muted); }
+
+    /* ── Question Card ── */
+    .question-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+    .question-card:hover { border-color: rgba(123,47,255,0.3); }
+    .question-card.answered { border-color: rgba(0,255,136,0.25); }
+    .question-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .question-num { font-family: var(--font-display); font-size: 0.7rem; color: var(--accent-purple); background: rgba(123,47,255,0.12); border: 1px solid rgba(123,47,255,0.25); border-radius: var(--radius-sm); padding: 4px 10px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .question-text { font-size: 1rem; color: var(--text-primary); line-height: 1.6; font-weight: 500; }
+    .question-hint { font-family: var(--font-code); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 16px; }
+
+    /* ── Options (radio/checkbox) ── */
+    .options-list { display: flex; flex-direction: column; gap: 10px; }
+    .option-label {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.93rem; color: var(--text-secondary);
+    }
+    .option-label:hover { background: rgba(123,47,255,0.08); border-color: rgba(123,47,255,0.3); color: var(--text-primary); }
+    .option-label input { accent-color: var(--accent-purple); width: 16px; height: 16px; flex-shrink: 0; }
+    .option-label.selected { background: rgba(123,47,255,0.12); border-color: rgba(123,47,255,0.45); color: var(--text-primary); }
+
+    /* ── Correct / Wrong reveal ── */
+    .option-label.correct { background: rgba(0,255,136,0.1) !important; border-color: rgba(0,255,136,0.5) !important; color: var(--accent-green) !important; }
+    .option-label.wrong { background: rgba(255,51,102,0.1) !important; border-color: rgba(255,51,102,0.5) !important; color: var(--accent-red) !important; }
+
+    /* ── Drag Rank ── */
+    .rank-list { display: flex; flex-direction: column; gap: 8px; }
+    .rank-item {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      cursor: grab;
+      font-size: 0.92rem; color: var(--text-secondary);
+      user-select: none;
+      transition: var(--transition);
+    }
+    .rank-item:active { cursor: grabbing; }
+    .rank-item.dragging { opacity: 0.5; border-color: var(--accent-purple); }
+    .rank-item.drag-over { border-color: var(--accent-cyan); background: rgba(0,212,255,0.06); }
+    .rank-handle { color: var(--text-muted); font-size: 0.85rem; flex-shrink: 0; }
+    .rank-num { font-family: var(--font-display); font-size: 0.65rem; color: var(--accent-purple); background: rgba(123,47,255,0.15); border-radius: 3px; padding: 2px 8px; flex-shrink: 0; min-width: 28px; text-align: center; }
+
+    /* ── Match ── */
+    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .match-left { display: flex; flex-direction: column; gap: 8px; }
+    .match-right { display: flex; flex-direction: column; gap: 8px; }
+    .match-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 0.88rem; color: var(--text-secondary);
+    }
+    .match-item.left-item { border-left: 3px solid var(--accent-cyan); }
+    .match-select {
+      width: 100%; background: rgba(10,18,32,0.9); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text-secondary);
+      font-family: var(--font-body); font-size: 0.85rem; cursor: pointer;
+      transition: var(--transition);
+    }
+    .match-select:focus { outline: none; border-color: var(--accent-purple); }
+
+    /* ── True/False ── */
+    .tf-options { display: flex; gap: 12px; }
+    .tf-btn {
+      flex: 1; padding: 12px; border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      color: var(--text-secondary); font-family: var(--font-code); font-size: 0.85rem;
+      cursor: pointer; transition: var(--transition); letter-spacing: 1px;
+    }
+    .tf-btn:hover { border-color: rgba(123,47,255,0.4); background: rgba(123,47,255,0.08); color: var(--text-primary); }
+    .tf-btn.selected-true { background: rgba(0,255,136,0.12); border-color: rgba(0,255,136,0.4); color: var(--accent-green); }
+    .tf-btn.selected-false { background: rgba(255,51,102,0.12); border-color: rgba(255,51,102,0.4); color: var(--accent-red); }
+
+    /* ── Submit ── */
+    .exam-submit-wrap { text-align: center; margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--border-dim); }
+    .btn-submit {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+      color: #000; font-family: var(--font-display); font-size: 0.9rem; font-weight: 700;
+      letter-spacing: 2px; padding: 18px 56px; border-radius: var(--radius-md);
+      border: none; cursor: pointer; transition: var(--transition);
+      box-shadow: var(--glow-green);
+    }
+    .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(0,255,136,0.5); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ── Results ── */
+    .results-panel {
+      display: none; max-width: 700px; margin: 60px auto;
+      background: var(--bg-card); border: 1px solid rgba(0,255,136,0.25);
+      border-radius: var(--radius-xl); padding: 56px 48px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .results-panel::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(0,255,136,0.08) 0%, transparent 70%); pointer-events: none; }
+    .results-panel.visible { display: block; }
+    .results-score { font-family: var(--font-display); font-size: clamp(3rem,8vw,6rem); font-weight: 900; color: var(--accent-green); text-shadow: var(--glow-green); line-height: 1; margin-bottom: 8px; }
+    .results-max { font-family: var(--font-code); font-size: 1rem; color: var(--text-muted); margin-bottom: 28px; }
+    .results-grade { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; }
+    .results-desc { font-size: 1rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.7; }
+    .results-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 40px; text-align: left; }
+    .breakdown-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border-dim); border-radius: var(--radius-sm); padding: 12px 16px; }
+    .breakdown-label { font-family: var(--font-code); font-size: 0.68rem; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 4px; }
+    .breakdown-val { font-family: var(--font-display); font-size: 1rem; color: var(--accent-green); }
+    .btn-retry { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--accent-purple), #a855f7); color: #fff; font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; padding: 14px 36px; border-radius: var(--radius-md); border: none; cursor: pointer; transition: var(--transition); margin: 8px; }
+    .btn-retry:hover { transform: translateY(-2px); }
+    .btn-home { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: var(--accent-green); font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; padding: 14px 36px; border-radius: var(--radius-md); border: 1px solid rgba(0,255,136,0.3); cursor: pointer; transition: var(--transition); text-decoration: none; margin: 8px; }
+    .btn-home:hover { background: rgba(0,255,136,0.08); border-color: var(--accent-green); }
+
+    @media (max-width: 640px) {
+      .match-grid { grid-template-columns: 1fr; }
+      .results-breakdown { grid-template-columns: 1fr; }
+      .tf-options { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">🐍 PYAUTO</a>
+  <a href="index.html" class="nav-back"><i class="fas fa-arrow-left"></i> На главную</a>
+  <div class="nav-progress" id="nav-prog"></div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="exam-hero" id="exam-hero">
+  <div class="exam-hero-label">/ итоговая аттестация</div>
+  <h1 class="exam-hero-title">Итоговый <span>Экзамен</span></h1>
+  <p class="exam-hero-desc">
+    Комплексная проверка знаний по всем шести модулям курса «Python-автоматизация». 
+    100 вопросов разных форматов. Результат отображается сразу после сдачи.
+  </p>
+  <div class="exam-meta">
+    <span class="exam-meta-item">📋 100 вопросов</span>
+    <span class="exam-meta-item">📚 6 модулей</span>
+    <span class="exam-meta-item">⏱ Без ограничения времени</span>
+    <span class="exam-meta-item">🔄 Можно пересдать</span>
+  </div>
+  <button class="btn-start" id="btn-start"><i class="fas fa-play"></i> Начать экзамен</button>
+</section>
+
+<!-- ═══ PROGRESS BAR ═══ -->
+<div class="exam-progress-wrap" id="exam-progress-wrap">
+  <span class="exam-progress-label">ПРОГРЕСС</span>
+  <div class="exam-progress-bar"><div class="exam-progress-fill" id="exam-progress-fill"></div></div>
+  <span class="exam-progress-count" id="exam-progress-count">0 / 100</span>
+</div>
+
+<!-- ═══ EXAM ═══ -->
+<div class="exam-container" id="exam-container">
+
+  <!-- PART 1: Single choice -->
+  <div class="section-divider">
+    <h2>ЧАСТЬ I — ОДИН ПРАВИЛЬНЫЙ ОТВЕТ</h2>
+    <p>Вопросы 1–20 · Выберите единственный верный вариант</p>
+  </div>
+
+  <!-- Q1 -->
+  <div class="question-card" data-q="1" data-type="single" data-correct="b">
+    <div class="question-header">
+      <span class="question-num">Q 01</span>
+      <span class="question-text">Какая команда создаёт виртуальное окружение Python в текущей директории?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q1" value="a"> python create venv myenv</label>
+      <label class="option-label"><input type="radio" name="q1" value="b"> python -m venv myenv</label>
+      <label class="option-label"><input type="radio" name="q1" value="c"> pip install virtualenv myenv</label>
+      <label class="option-label"><input type="radio" name="q1" value="d"> venv --create myenv</label>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-card" data-q="2" data-type="single" data-correct="c">
+    <div class="question-header">
+      <span class="question-num">Q 02</span>
+      <span class="question-text">Какой модуль Python используется для работы с путями файловой системы в объектно-ориентированном стиле?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q2" value="a"> os.path</label>
+      <label class="option-label"><input type="radio" name="q2" value="b"> shutil</label>
+      <label class="option-label"><input type="radio" name="q2" value="c"> pathlib</label>
+      <label class="option-label"><input type="radio" name="q2" value="d"> glob</label>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-card" data-q="3" data-type="single" data-correct="a">
+    <div class="question-header">
+      <span class="question-num">Q 03</span>
+      <span class="question-text">Какая функция из модуля <code>shutil</code> рекурсивно копирует директорию со всем содержимым?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q3" value="a"> shutil.copytree()</label>
+      <label class="option-label"><input type="radio" name="q3" value="b"> shutil.copy2()</label>
+      <label class="option-label"><input type="radio" name="q3" value="c"> shutil.move()</label>
+      <label class="option-label"><input type="radio" name="q3" value="d"> shutil.copydir()</label>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-card" data-q="4" data-type="single" data-correct="b">
+    <div class="question-header">
+      <span class="question-num">Q 04</span>
+      <span class="question-text">Какой класс из библиотеки <code>openpyxl</code> используется для загрузки существующего Excel-файла?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q4" value="a"> ExcelFile</label>
+      <label class="option-label"><input type="radio" name="q4" value="b"> load_workbook()</label>
+      <label class="option-label"><input type="radio" name="q4" value="c"> Workbook.open()</label>
+      <label class="option-label"><input type="radio" name="q4" value="d"> XlsxReader()</label>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-card" data-q="5" data-type="single" data-correct="d">
+    <div class="question-header">
+      <span class="question-num">Q 05</span>
+      <span class="question-text">Какой HTTP-метод используется при отправке данных формы в REST API для создания нового ресурса?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q5" value="a"> GET</label>
+      <label class="option-label"><input type="radio" name="q5" value="b"> PUT</label>
+      <label class="option-label"><input type="radio" name="q5" value="c"> PATCH</label>
+      <label class="option-label"><input type="radio" name="q5" value="d"> POST</label>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question-card" data-q="6" data-type="single" data-correct="c">
+    <div class="question-header">
+      <span class="question-num">Q 06</span>
+      <span class="question-text">Какая команда запускает Selenium WebDriver в headless-режиме (без отображения окна браузера)?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q6" value="a"> driver = webdriver.Chrome(headless=True)</label>
+      <label class="option-label"><input type="radio" name="q6" value="b"> driver.set_headless(True)</label>
+      <label class="option-label"><input type="radio" name="q6" value="c"> options.add_argument('--headless'); driver = webdriver.Chrome(options=options)</label>
+      <label class="option-label"><input type="radio" name="q6" value="d"> webdriver.Chrome(mode='headless')</label>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question-card" data-q="7" data-type="single" data-correct="a">
+    <div class="question-header">
+      <span class="question-num">Q 07</span>
+      <span class="question-text">Какой уровень логирования является наиболее критичным в иерархии Python <code>logging</code>?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q7" value="a"> CRITICAL</label>
+      <label class="option-label"><input type="radio" name="q7" value="b"> ERROR</label>
+      <label class="option-label"><input type="radio" name="q7" value="c"> WARNING</label>
+      <label class="option-label"><input type="radio" name="q7" value="d"> FATAL</label>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question-card" data-q="8" data-type="single" data-correct="b">
+    <div class="question-header">
+      <span class="question-num">Q 08</span>
+      <span class="question-text">Какой порт по умолчанию использует SMTP для отправки email с TLS-шифрованием?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q8" value="a"> 25</label>
+      <label class="option-label"><input type="radio" name="q8" value="b"> 587</label>
+      <label class="option-label"><input type="radio" name="q8" value="c"> 443</label>
+      <label class="option-label"><input type="radio" name="q8" value="d"> 993</label>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="question-card" data-q="9" data-type="single" data-correct="d">
+    <div class="question-header">
+      <span class="question-num">Q 09</span>
+      <span class="question-text">Какой флаг PyInstaller создаёт один исполняемый .exe-файл (без папки)?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q9" value="a"> --bundle</label>
+      <label class="option-label"><input type="radio" name="q9" value="b"> --pack</label>
+      <label class="option-label"><input type="radio" name="q9" value="c"> --standalone</label>
+      <label class="option-label"><input type="radio" name="q9" value="d"> --onefile</label>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="question-card" data-q="10" data-type="single" data-correct="a">
+    <div class="question-header">
+      <span class="question-num">Q 10</span>
+      <span class="question-text">Какая инструкция в <code>Dockerfile</code> задаёт команду, запускаемую при старте контейнера?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q10" value="a"> CMD</label>
+      <label class="option-label"><input type="radio" name="q10" value="b"> RUN</label>
+      <label class="option-label"><input type="radio" name="q10" value="c"> EXEC</label>
+      <label class="option-label"><input type="radio" name="q10" value="d"> START</label>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="question-card" data-q="11" data-type="single" data-correct="c">
+    <div class="question-header">
+      <span class="question-num">Q 11</span>
+      <span class="question-text">Какой метод pandas используется для чтения CSV-файла в DataFrame?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q11" value="a"> pd.read_file()</label>
+      <label class="option-label"><input type="radio" name="q11" value="b"> pd.import_csv()</label>
+      <label class="option-label"><input type="radio" name="q11" value="c"> pd.read_csv()</label>
+      <label class="option-label"><input type="radio" name="q11" value="d"> pd.load_csv()</label>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="question-card" data-q="12" data-type="single" data-correct="b">
+    <div class="question-header">
+      <span class="question-num">Q 12</span>
+      <span class="question-text">Что означает статус-код HTTP <code>429</code> при работе с API?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q12" value="a"> Неверный токен авторизации</label>
+      <label class="option-label"><input type="radio" name="q12" value="b"> Превышен лимит запросов (rate limit)</label>
+      <label class="option-label"><input type="radio" name="q12" value="c"> Ресурс не найден</label>
+      <label class="option-label"><input type="radio" name="q12" value="d"> Внутренняя ошибка сервера</label>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="question-card" data-q="13" data-type="single" data-correct="a">
+    <div class="question-header">
+      <span class="question-num">Q 13</span>
+      <span class="question-text">Какой метод BeautifulSoup возвращает все совпадения по CSS-селектору?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q13" value="a"> soup.select()</label>
+      <label class="option-label"><input type="radio" name="q13" value="b"> soup.find_all()</label>
+      <label class="option-label"><input type="radio" name="q13" value="c"> soup.get_all()</label>
+      <label class="option-label"><input type="radio" name="q13" value="d"> soup.query()</label>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="question-card" data-q="14" data-type="single" data-correct="d">
+    <div class="question-header">
+      <span class="question-num">Q 14</span>
+      <span class="question-text">Какая функция Python используется для сериализации объекта в JSON-строку?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q14" value="a"> json.parse()</label>
+      <label class="option-label"><input type="radio" name="q14" value="b"> json.encode()</label>
+      <label class="option-label"><input type="radio" name="q14" value="c"> json.serialize()</label>
+      <label class="option-label"><input type="radio" name="q14" value="d"> json.dumps()</label>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="question-card" data-q="15" data-type="single" data-correct="c">
+    <div class="question-header">
+      <span class="question-num">Q 15</span>
+      <span class="question-text">Как в GitHub Actions задать запуск workflow по расписанию каждое утро в 8:00 UTC?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q15" value="a"> schedule: run: "08:00"</label>
+      <label class="option-label"><input type="radio" name="q15" value="b"> on: timer: "0 8 * * *"</label>
+      <label class="option-label"><input type="radio" name="q15" value="c"> on: schedule: - cron: "0 8 * * *"</label>
+      <label class="option-label"><input type="radio" name="q15" value="d"> trigger: cron: "8:00 daily"</label>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="question-card" data-q="16" data-type="single" data-correct="b">
+    <div class="question-header">
+      <span class="question-num">Q 16</span>
+      <span class="question-text">Какой метод объекта <code>Path</code> из <code>pathlib</code> возвращает расширение файла?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q16" value="a"> .ext</label>
+      <label class="option-label"><input type="radio" name="q16" value="b"> .suffix</label>
+      <label class="option-label"><input type="radio" name="q16" value="c"> .extension</label>
+      <label class="option-label"><input type="radio" name="q16" value="d"> .type</label>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="question-card" data-q="17" data-type="single" data-correct="a">
+    <div class="question-header">
+      <span class="question-num">Q 17</span>
+      <span class="question-text">Какая команда Docker запускает контейнер в фоновом режиме (detach)?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q17" value="a"> docker run -d image_name</label>
+      <label class="option-label"><input type="radio" name="q17" value="b"> docker start --bg image_name</label>
+      <label class="option-label"><input type="radio" name="q17" value="c"> docker run --background image_name</label>
+      <label class="option-label"><input type="radio" name="q17" value="d"> docker exec -d image_name</label>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="question-card" data-q="18" data-type="single" data-correct="d">
+    <div class="question-header">
+      <span class="question-num">Q 18</span>
+      <span class="question-text">Какой декоратор python-telegram-bot используется для обработки текстовых сообщений от пользователя?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q18" value="a"> @app.on_text()</label>
+      <label class="option-label"><input type="radio" name="q18" value="b"> @bot.message(filters.text)</label>
+      <label class="option-label"><input type="radio" name="q18" value="c"> @handler.message()</label>
+      <label class="option-label"><input type="radio" name="q18" value="d"> application.add_handler(MessageHandler(filters.TEXT, callback))</label>
+    </div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="question-card" data-q="19" data-type="single" data-correct="b">
+    <div class="question-header">
+      <span class="question-num">Q 19</span>
+      <span class="question-text">Что такое <code>requirements.txt</code> в Python-проекте?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q19" value="a"> Файл с описанием архитектуры проекта</label>
+      <label class="option-label"><input type="radio" name="q19" value="b"> Файл со списком зависимостей проекта и их версиями</label>
+      <label class="option-label"><input type="radio" name="q19" value="c"> Конфигурационный файл виртуального окружения</label>
+      <label class="option-label"><input type="radio" name="q19" value="d"> Файл с тестами проекта</label>
+    </div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="question-card" data-q="20" data-type="single" data-correct="c">
+    <div class="question-header">
+      <span class="question-num">Q 20</span>
+      <span class="question-text">Какой метод DataFrame pandas используется для группировки данных?</span>
+    </div>
+    <div class="options-list">
+      <label class="option-label"><input type="radio" name="q20" value="a"> df.aggregate()</label>
+      <label class="option-label"><input type="radio" name="q20" value="b"> df.cluster()</label>
+      <label class="option-label"><input type="radio" name="q20" value="c"> df.groupby()</label>
+      <label class="option-label"><input type="radio" name="q20" value="d"> df.partition()</label>
+    </div>
+  </div>
+
+
+  <!-- PART 2: Multiple choice -->
+  <div class="section-divider">
+    <h2>ЧАСТЬ II — НЕСКОЛЬКО ПРАВИЛЬНЫХ ОТВЕТОВ</h2>
+    <p>Вопросы 21–40 · Выберите все верные варианты</p>
+  </div>
+
+  <!-- Q21 -->
+  <div class="question-card" data-q="21" data-type="multi" data-correct="a,c,d">
+    <div class="question-header">
+      <span class="question-num">Q 21</span>
+      <span class="question-text">Какие из следующих утверждений про <code>virtual environment</code> в Python верны?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q21" value="a"> Изолирует зависимости проекта от системного Python</label>
+      <label class="option-label"><input type="checkbox" name="q21" value="b"> Автоматически создаётся при установке любой библиотеки</label>
+      <label class="option-label"><input type="checkbox" name="q21" value="c"> Позволяет иметь разные версии пакетов для разных проектов</label>
+      <label class="option-label"><input type="checkbox" name="q21" value="d"> Активируется командой <code>source venv/bin/activate</code> на Linux/Mac</label>
+    </div>
+  </div>
+
+  <!-- Q22 -->
+  <div class="question-card" data-q="22" data-type="multi" data-correct="b,c,d">
+    <div class="question-header">
+      <span class="question-num">Q 22</span>
+      <span class="question-text">Какие операции можно выполнить с помощью модуля <code>os</code>?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q22" value="a"> Отправка HTTP-запросов</label>
+      <label class="option-label"><input type="checkbox" name="q22" value="b"> Получение списка файлов в директории</label>
+      <label class="option-label"><input type="checkbox" name="q22" value="c"> Создание директорий</label>
+      <label class="option-label"><input type="checkbox" name="q22" value="d"> Получение переменных окружения</label>
+    </div>
+  </div>
+
+  <!-- Q23 -->
+  <div class="question-card" data-q="23" data-type="multi" data-correct="a,b,d">
+    <div class="question-header">
+      <span class="question-num">Q 23</span>
+      <span class="question-text">Какие форматы файлов поддерживает библиотека <code>pandas</code> для чтения данных?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q23" value="a"> CSV</label>
+      <label class="option-label"><input type="checkbox" name="q23" value="b"> Excel (.xlsx)</label>
+      <label class="option-label"><input type="checkbox" name="q23" value="c"> Исполняемые .exe файлы</label>
+      <label class="option-label"><input type="checkbox" name="q23" value="d"> JSON</label>
+    </div>
+  </div>
+
+  <!-- Q24 -->
+  <div class="question-card" data-q="24" data-type="multi" data-correct="a,c,d">
+    <div class="question-header">
+      <span class="question-num">Q 24</span>
+      <span class="question-text">Какие методы используются в Selenium для поиска элементов на странице?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q24" value="a"> find_element(By.ID, "id")</label>
+      <label class="option-label"><input type="checkbox" name="q24" value="b"> driver.get_element("#css")</label>
+      <label class="option-label"><input type="checkbox" name="q24" value="c"> find_element(By.CSS_SELECTOR, ".class")</label>
+      <label class="option-label"><input type="checkbox" name="q24" value="d"> find_elements(By.XPATH, "//tag")</label>
+    </div>
+  </div>
+
+  <!-- Q25 -->
+  <div class="question-card" data-q="25" data-type="multi" data-correct="b,c">
+    <div class="question-header">
+      <span class="question-num">Q 25</span>
+      <span class="question-text">Что из перечисленного является правильным способом аутентификации при работе с REST API?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q25" value="a"> Передача пароля в URL как параметра ?pass=</label>
+      <label class="option-label"><input type="checkbox" name="q25" value="b"> Bearer-токен в заголовке Authorization</label>
+      <label class="option-label"><input type="checkbox" name="q25" value="c"> Basic Auth (имя:пароль в base64)</label>
+      <label class="option-label"><input type="checkbox" name="q25" value="d"> Передача токена в теле ответа сервера</label>
+    </div>
+  </div>
+
+  <!-- Q26 -->
+  <div class="question-card" data-q="26" data-type="multi" data-correct="a,b,c,d">
+    <div class="question-header">
+      <span class="question-num">Q 26</span>
+      <span class="question-text">Какие возможности предоставляет <code>openpyxl</code> для работы с Excel?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q26" value="a"> Создание диаграмм</label>
+      <label class="option-label"><input type="checkbox" name="q26" value="b"> Стилизация ячеек (шрифт, цвет, рамки)</label>
+      <label class="option-label"><input type="checkbox" name="q26" value="c"> Добавление формул</label>
+      <label class="option-label"><input type="checkbox" name="q26" value="d"> Работа с несколькими листами</label>
+    </div>
+  </div>
+
+  <!-- Q27 -->
+  <div class="question-card" data-q="27" data-type="multi" data-correct="b,d">
+    <div class="question-header">
+      <span class="question-num">Q 27</span>
+      <span class="question-text">Какие инструменты используются для планирования задач по расписанию в Python?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q27" value="a"> asyncio.sleep() как основной планировщик</label>
+      <label class="option-label"><input type="checkbox" name="q27" value="b"> Библиотека schedule</label>
+      <label class="option-label"><input type="checkbox" name="q27" value="c"> os.system('python script.py')</label>
+      <label class="option-label"><input type="checkbox" name="q27" value="d"> Cron (Linux) / Task Scheduler (Windows)</label>
+    </div>
+  </div>
+
+  <!-- Q28 -->
+  <div class="question-card" data-q="28" data-type="multi" data-correct="a,c,d">
+    <div class="question-header">
+      <span class="question-num">Q 28</span>
+      <span class="question-text">Что из следующего нужно учитывать при парсинге сайтов, чтобы не получить блокировку?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q28" value="a"> Добавлять случайные задержки между запросами</label>
+      <label class="option-label"><input type="checkbox" name="q28" value="b"> Всегда делать запросы от имени root-пользователя</label>
+      <label class="option-label"><input type="checkbox" name="q28" value="c"> Устанавливать корректный User-Agent в заголовках</label>
+      <label class="option-label"><input type="checkbox" name="q28" value="d"> Соблюдать правила robots.txt</label>
+    </div>
+  </div>
+
+  <!-- Q29 -->
+  <div class="question-card" data-q="29" data-type="multi" data-correct="a,b,d">
+    <div class="question-header">
+      <span class="question-num">Q 29</span>
+      <span class="question-text">Какие параметры принимает команда <code>docker run</code>?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q29" value="a"> -p для проброса портов</label>
+      <label class="option-label"><input type="checkbox" name="q29" value="b"> -v для монтирования томов</label>
+      <label class="option-label"><input type="checkbox" name="q29" value="c"> --python для указания версии Python</label>
+      <label class="option-label"><input type="checkbox" name="q29" value="d"> -e для передачи переменных окружения</label>
+    </div>
+  </div>
+
+  <!-- Q30 -->
+  <div class="question-card" data-q="30" data-type="multi" data-correct="b,c,d">
+    <div class="question-header">
+      <span class="question-num">Q 30</span>
+      <span class="question-text">Какие типы хендлеров поддерживает <code>python-telegram-bot</code>?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q30" value="a"> SQLHandler для обработки запросов к БД</label>
+      <label class="option-label"><input type="checkbox" name="q30" value="b"> CommandHandler для команд (/start, /help)</label>
+      <label class="option-label"><input type="checkbox" name="q30" value="c"> CallbackQueryHandler для inline-кнопок</label>
+      <label class="option-label"><input type="checkbox" name="q30" value="d"> MessageHandler для текстовых и медиа-сообщений</label>
+    </div>
+  </div>
+
+  <!-- Q31 -->
+  <div class="question-card" data-q="31" data-type="multi" data-correct="a,b">
+    <div class="question-header">
+      <span class="question-num">Q 31</span>
+      <span class="question-text">Какие способы создания архива ZIP доступны в Python?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q31" value="a"> shutil.make_archive()</label>
+      <label class="option-label"><input type="checkbox" name="q31" value="b"> zipfile.ZipFile() с режимом 'w'</label>
+      <label class="option-label"><input type="checkbox" name="q31" value="c"> os.compress()</label>
+      <label class="option-label"><input type="checkbox" name="q31" value="d"> pathlib.Path.zip()</label>
+    </div>
+  </div>
+
+  <!-- Q32 -->
+  <div class="question-card" data-q="32" data-type="multi" data-correct="a,c,d">
+    <div class="question-header">
+      <span class="question-num">Q 32</span>
+      <span class="question-text">Что из следующего относится к преимуществам использования <code>logging</code> вместо <code>print()</code>?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q32" value="a"> Возможность записи в файл с ротацией</label>
+      <label class="option-label"><input type="checkbox" name="q32" value="b"> Автоматическое исправление ошибок в коде</label>
+      <label class="option-label"><input type="checkbox" name="q32" value="c"> Уровни важности сообщений (DEBUG, INFO, WARNING...)</label>
+      <label class="option-label"><input type="checkbox" name="q32" value="d"> Автоматическое добавление временной метки</label>
+    </div>
+  </div>
+
+  <!-- Q33 -->
+  <div class="question-card" data-q="33" data-type="multi" data-correct="b,c">
+    <div class="question-header">
+      <span class="question-num">Q 33</span>
+      <span class="question-text">Что необходимо указать в Dockerfile при создании образа для Python-скрипта?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q33" value="a"> AUTHOR для указания имени разработчика (обязательно)</label>
+      <label class="option-label"><input type="checkbox" name="q33" value="b"> FROM для базового образа (например, python:3.12-slim)</label>
+      <label class="option-label"><input type="checkbox" name="q33" value="c"> COPY для копирования файлов проекта в образ</label>
+      <label class="option-label"><input type="checkbox" name="q33" value="d"> MONITOR для настройки мониторинга контейнера</label>
+    </div>
+  </div>
+
+  <!-- Q34 -->
+  <div class="question-card" data-q="34" data-type="multi" data-correct="a,b,d">
+    <div class="question-header">
+      <span class="question-num">Q 34</span>
+      <span class="question-text">Какие параметры функции <code>requests.get()</code> наиболее часто используются?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q34" value="a"> headers=</label>
+      <label class="option-label"><input type="checkbox" name="q34" value="b"> params=</label>
+      <label class="option-label"><input type="checkbox" name="q34" value="c"> body= (для GET запросов)</label>
+      <label class="option-label"><input type="checkbox" name="q34" value="d"> timeout=</label>
+    </div>
+  </div>
+
+  <!-- Q35 -->
+  <div class="question-card" data-q="35" data-type="multi" data-correct="a,c">
+    <div class="question-header">
+      <span class="question-num">Q 35</span>
+      <span class="question-text">Какие библиотеки Python используются для автоматизации работы с Google Sheets?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q35" value="a"> gspread</label>
+      <label class="option-label"><input type="checkbox" name="q35" value="b"> xlsxwriter</label>
+      <label class="option-label"><input type="checkbox" name="q35" value="c"> google-auth</label>
+      <label class="option-label"><input type="checkbox" name="q35" value="d"> openpyxl</label>
+    </div>
+  </div>
+
+  <!-- Q36 -->
+  <div class="question-card" data-q="36" data-type="multi" data-correct="b,c,d">
+    <div class="question-header">
+      <span class="question-num">Q 36</span>
+      <span class="question-text">Какие меры безопасности важны при хранении API-ключей и паролей в Python-проекте?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q36" value="a"> Хранить в комментариях к коду для удобства</label>
+      <label class="option-label"><input type="checkbox" name="q36" value="b"> Использовать переменные окружения (.env файл)</label>
+      <label class="option-label"><input type="checkbox" name="q36" value="c"> Добавить .env в .gitignore</label>
+      <label class="option-label"><input type="checkbox" name="q36" value="d"> Использовать python-dotenv для загрузки переменных</label>
+    </div>
+  </div>
+
+  <!-- Q37 -->
+  <div class="question-card" data-q="37" data-type="multi" data-correct="a,b,c">
+    <div class="question-header">
+      <span class="question-num">Q 37</span>
+      <span class="question-text">Что из следующего делает PyInstaller при сборке .exe?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q37" value="a"> Включает интерпретатор Python в исполняемый файл</label>
+      <label class="option-label"><input type="checkbox" name="q37" value="b"> Включает все зависимые библиотеки</label>
+      <label class="option-label"><input type="checkbox" name="q37" value="c"> Создаёт файл .spec с настройками сборки</label>
+      <label class="option-label"><input type="checkbox" name="q37" value="d"> Автоматически шифрует исходный код</label>
+    </div>
+  </div>
+
+  <!-- Q38 -->
+  <div class="question-card" data-q="38" data-type="multi" data-correct="a,d">
+    <div class="question-header">
+      <span class="question-num">Q 38</span>
+      <span class="question-text">Какие способы обхода динамического контента при парсинге существуют?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q38" value="a"> Selenium WebDriver (полноценный браузер)</label>
+      <label class="option-label"><input type="checkbox" name="q38" value="b"> Парсинг robots.txt</label>
+      <label class="option-label"><input type="checkbox" name="q38" value="c"> Использование только BeautifulSoup</label>
+      <label class="option-label"><input type="checkbox" name="q38" value="d"> Перехват XHR/fetch запросов через DevTools и их прямой вызов</label>
+    </div>
+  </div>
+
+  <!-- Q39 -->
+  <div class="question-card" data-q="39" data-type="multi" data-correct="b,c,d">
+    <div class="question-header">
+      <span class="question-num">Q 39</span>
+      <span class="question-text">Какие возможности предоставляет модуль <code>watchdog</code>?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q39" value="a"> Мониторинг сетевых соединений</label>
+      <label class="option-label"><input type="checkbox" name="q39" value="b"> Отслеживание создания новых файлов</label>
+      <label class="option-label"><input type="checkbox" name="q39" value="c"> Отслеживание изменения файлов</label>
+      <label class="option-label"><input type="checkbox" name="q39" value="d"> Отслеживание удаления файлов и папок</label>
+    </div>
+  </div>
+
+  <!-- Q40 -->
+  <div class="question-card" data-q="40" data-type="multi" data-correct="a,c,d">
+    <div class="question-header">
+      <span class="question-num">Q 40</span>
+      <span class="question-text">Какие шаги выполняются при деплое Python-скрипта на Linux VPS?</span>
+    </div>
+    <p class="question-hint">Выберите все правильные ответы</p>
+    <div class="options-list">
+      <label class="option-label"><input type="checkbox" name="q40" value="a"> Подключение по SSH</label>
+      <label class="option-label"><input type="checkbox" name="q40" value="b"> Установка Windows Subsystem for Linux</label>
+      <label class="option-label"><input type="checkbox" name="q40" value="c"> Установка Python и зависимостей на сервере</label>
+      <label class="option-label"><input type="checkbox" name="q40" value="d"> Настройка systemd-сервиса для автозапуска</label>
+    </div>
+  </div>
+
+
+  <!-- PART 3: Hierarchy ranking -->
+  <div class="section-divider">
+    <h2>ЧАСТЬ III — РАССТАНОВКА ИЕРАРХИИ</h2>
+    <p>Вопросы 41–60 · Перетащите элементы в правильном порядке (от первого к последнему)</p>
+  </div>
+
+  <!-- Q41 -->
+  <div class="question-card" data-q="41" data-type="rank" data-correct="b,c,a,d">
+    <div class="question-header">
+      <span class="question-num">Q 41</span>
+      <span class="question-text">Расставьте уровни логирования Python от наименее к наиболее критичному:</span>
+    </div>
+    <div class="rank-list" data-rank="q41">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> ERROR</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> DEBUG</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> INFO</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> CRITICAL</div>
+    </div>
+  </div>
+
+  <!-- Q42 -->
+  <div class="question-card" data-q="42" data-type="rank" data-correct="c,a,b,d">
+    <div class="question-header">
+      <span class="question-num">Q 42</span>
+      <span class="question-text">Расставьте этапы создания Telegram-бота в правильном порядке:</span>
+    </div>
+    <div class="rank-list" data-rank="q42">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Инициализация Application с токеном</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Добавление хендлеров команд и сообщений</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Получение токена у @BotFather</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Запуск app.run_polling()</div>
+    </div>
+  </div>
+
+  <!-- Q43 -->
+  <div class="question-card" data-q="43" data-type="rank" data-correct="d,a,c,b">
+    <div class="question-header">
+      <span class="question-num">Q 43</span>
+      <span class="question-text">Расставьте шаги парсинга сайта с помощью requests + BeautifulSoup:</span>
+    </div>
+    <div class="rank-list" data-rank="q43">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Создание объекта BeautifulSoup из HTML-текста</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Сохранение извлечённых данных в CSV/Excel</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Извлечение нужных элементов через find/select</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Отправка HTTP GET запроса через requests</div>
+    </div>
+  </div>
+
+  <!-- Q44 -->
+  <div class="question-card" data-q="44" data-type="rank" data-correct="b,d,a,c">
+    <div class="question-header">
+      <span class="question-num">Q 44</span>
+      <span class="question-text">Расставьте шаги сборки .exe с помощью PyInstaller:</span>
+    </div>
+    <div class="rank-list" data-rank="q44">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Запуск команды pyinstaller --onefile script.py</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Установка PyInstaller через pip</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Тестирование готового .exe файла</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Подготовка скрипта и всех зависимостей</div>
+    </div>
+  </div>
+
+  <!-- Q45 -->
+  <div class="question-card" data-q="45" data-type="rank" data-correct="c,a,d,b">
+    <div class="question-header">
+      <span class="question-num">Q 45</span>
+      <span class="question-text">Расставьте этапы настройки виртуального окружения Python:</span>
+    </div>
+    <div class="rank-list" data-rank="q45">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Активация виртуального окружения</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Заморозка зависимостей в requirements.txt</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Создание venv командой python -m venv</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Установка нужных пакетов через pip install</div>
+    </div>
+  </div>
+
+  <!-- Q46 -->
+  <div class="question-card" data-q="46" data-type="rank" data-correct="a,c,b,d">
+    <div class="question-header">
+      <span class="question-num">Q 46</span>
+      <span class="question-text">Расставьте инструкции Dockerfile в типичном правильном порядке:</span>
+    </div>
+    <div class="rank-list" data-rank="q46">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> FROM python:3.12-slim</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> RUN pip install -r requirements.txt</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> COPY requirements.txt .</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> CMD ["python", "script.py"]</div>
+    </div>
+  </div>
+
+  <!-- Q47 -->
+  <div class="question-card" data-q="47" data-type="rank" data-correct="d,b,a,c">
+    <div class="question-header">
+      <span class="question-num">Q 47</span>
+      <span class="question-text">Расставьте этапы работы с Excel-отчётом через openpyxl:</span>
+    </div>
+    <div class="rank-list" data-rank="q47">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Запись данных в ячейки листа</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Получение активного листа через wb.active</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Сохранение файла через wb.save()</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Создание Workbook() или загрузка load_workbook()</div>
+    </div>
+  </div>
+
+  <!-- Q48 -->
+  <div class="question-card" data-q="48" data-type="rank" data-correct="c,b,d,a">
+    <div class="question-header">
+      <span class="question-num">Q 48</span>
+      <span class="question-text">Расставьте приоритет уровней иерархии REST API-запроса от первого к последнему:</span>
+    </div>
+    <div class="rank-list" data-rank="q48">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Обработка ответа (парсинг JSON)</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Формирование заголовков и параметров</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Выбор эндпоинта и метода (GET/POST)</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Отправка запроса через requests</div>
+    </div>
+  </div>
+
+  <!-- Q49 -->
+  <div class="question-card" data-q="49" data-type="rank" data-correct="b,a,d,c">
+    <div class="question-header">
+      <span class="question-num">Q 49</span>
+      <span class="question-text">Расставьте шаги настройки CI/CD через GitHub Actions:</span>
+    </div>
+    <div class="rank-list" data-rank="q49">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Создание .github/workflows/main.yml</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Создание репозитория на GitHub</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Проверка логов выполнения в Actions tab</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Описание jobs и steps в YAML-файле</div>
+    </div>
+  </div>
+
+  <!-- Q50 -->
+  <div class="question-card" data-q="50" data-type="rank" data-correct="a,c,d,b">
+    <div class="question-header">
+      <span class="question-num">Q 50</span>
+      <span class="question-text">Расставьте шаги отправки email через Python smtplib:</span>
+    </div>
+    <div class="rank-list" data-rank="q50">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Создание объекта MIMEMultipart</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Вызов server.quit()</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Подключение к SMTP-серверу и login</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Отправка через server.send_message()</div>
+    </div>
+  </div>
+
+  <!-- Q51-60: remaining rank questions -->
+  <div class="question-card" data-q="51" data-type="rank" data-correct="c,a,b,d">
+    <div class="question-header"><span class="question-num">Q 51</span><span class="question-text">Расставьте части cron-выражения «0 9 * * 1» в правильном порядке описания:</span></div>
+    <div class="rank-list" data-rank="q51">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Час (9 = 9 утра)</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> День месяца (* = любой)</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Минута (0 = 00 минут)</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> День недели (1 = понедельник)</div>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="52" data-type="rank" data-correct="b,d,a,c">
+    <div class="question-header"><span class="question-num">Q 52</span><span class="question-text">Расставьте этапы работы Selenium при автоматизации браузера:</span></div>
+    <div class="rank-list" data-rank="q52">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Взаимодействие с найденным элементом</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Инициализация WebDriver</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Закрытие браузера driver.quit()</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Открытие страницы driver.get(url)</div>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="53" data-type="rank" data-correct="a,c,b,d">
+    <div class="question-header"><span class="question-num">Q 53</span><span class="question-text">Расставьте шаги организации Python-проекта от общего к частному:</span></div>
+    <div class="rank-list" data-rank="q53">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Корень проекта с README.md и requirements.txt</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Модули внутри пакета (utils.py, config.py)</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Пакет src/ с __init__.py</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Отдельные функции внутри модулей</div>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="54" data-type="rank" data-correct="d,b,c,a">
+    <div class="question-header"><span class="question-num">Q 54</span><span class="question-text">Расставьте типы данных pandas по размеру памяти (от меньшего к большему, типично):</span></div>
+    <div class="rank-list" data-rank="q54">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> object (строки)</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> int8</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> int32</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> bool</div>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="55" data-type="rank" data-correct="c,b,a,d">
+    <div class="question-header"><span class="question-num">Q 55</span><span class="question-text">Расставьте уровни абстракции автоматизации от низкого к высокому:</span></div>
+    <div class="rank-list" data-rank="q55">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Скрипт с бизнес-логикой</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Вызовы функций библиотек (requests, openpyxl)</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Системные вызовы OS</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Полная система автоматизации с планировщиком</div>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="56" data-type="rank" data-correct="b,a,c,d">
+    <div class="question-header"><span class="question-num">Q 56</span><span class="question-text">Расставьте шаги мониторинга сервера и оповещения в правильном порядке:</span></div>
+    <div class="rank-list" data-rank="q56">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Проверка метрик (CPU, память, доступность)</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Запуск скрипта по cron каждую минуту</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Сравнение с пороговыми значениями</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Отправка Telegram-уведомления при превышении</div>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="57" data-type="rank" data-correct="c,a,d,b">
+    <div class="question-header"><span class="question-num">Q 57</span><span class="question-text">Расставьте компоненты OAuth 2.0 аутентификации по порядку получения:</span></div>
+    <div class="rank-list" data-rank="q57">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Authorization code (после подтверждения пользователем)</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Доступ к API ресурсам</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Client ID и Client Secret (регистрация приложения)</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Access token (обмен code на token)</div>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="58" data-type="rank" data-correct="d,c,a,b">
+    <div class="question-header"><span class="question-num">Q 58</span><span class="question-text">Расставьте шаги обработки загруженного Excel-файла с данными:</span></div>
+    <div class="rank-list" data-rank="q58">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Фильтрация и группировка данных</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Экспорт результата в новый файл</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Чтение данных в DataFrame через pd.read_excel()</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Загрузка файла и проверка его существования</div>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="59" data-type="rank" data-correct="b,d,c,a">
+    <div class="question-header"><span class="question-num">Q 59</span><span class="question-text">Расставьте элементы архитектуры автоматизации бизнес-процесса от источника к результату:</span></div>
+    <div class="rank-list" data-rank="q59">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Уведомление в Telegram / Email</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Источник данных (файл, API, БД)</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Генерация отчёта (Excel, PDF)</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Обработка и трансформация данных</div>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="60" data-type="rank" data-correct="a,c,b,d">
+    <div class="question-header"><span class="question-num">Q 60</span><span class="question-text">Расставьте фазы разработки Python-скрипта автоматизации по правильному порядку:</span></div>
+    <div class="rank-list" data-rank="q60">
+      <div class="rank-item" draggable="true" data-val="a"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Анализ задачи и определение входных/выходных данных</div>
+      <div class="rank-item" draggable="true" data-val="b"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Тестирование на реальных данных</div>
+      <div class="rank-item" draggable="true" data-val="c"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Написание кода с обработкой ошибок</div>
+      <div class="rank-item" draggable="true" data-val="d"><span class="rank-num">?</span><span class="rank-handle">⠿</span> Деплой и настройка расписания</div>
+    </div>
+  </div>
+
+
+  <!-- PART 4: Matching -->
+  <div class="section-divider">
+    <h2>ЧАСТЬ IV — СОПОСТАВЛЕНИЕ</h2>
+    <p>Вопросы 61–70 · Соотнесите элементы левого столбца с правым</p>
+  </div>
+
+  <!-- Q61 -->
+  <div class="question-card" data-q="61" data-type="match" data-correct="b,d,a,c">
+    <div class="question-header"><span class="question-num">Q 61</span><span class="question-text">Сопоставьте Python-библиотеку с её основным назначением:</span></div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-item left-item">requests</div>
+        <div class="match-item left-item">BeautifulSoup</div>
+        <div class="match-item left-item">openpyxl</div>
+        <div class="match-item left-item">python-telegram-bot</div>
+      </div>
+      <div class="match-right">
+        <select class="match-select" data-match="q61-1"><option value="">— выберите —</option><option value="a">Работа с Excel-файлами</option><option value="b">HTTP-запросы к API и сайтам</option><option value="c">Создание Telegram-ботов</option><option value="d">Парсинг HTML-документов</option></select>
+        <select class="match-select" data-match="q61-2"><option value="">— выберите —</option><option value="a">Работа с Excel-файлами</option><option value="b">HTTP-запросы к API и сайтам</option><option value="c">Создание Telegram-ботов</option><option value="d">Парсинг HTML-документов</option></select>
+        <select class="match-select" data-match="q61-3"><option value="">— выберите —</option><option value="a">Работа с Excel-файлами</option><option value="b">HTTP-запросы к API и сайтам</option><option value="c">Создание Telegram-ботов</option><option value="d">Парсинг HTML-документов</option></select>
+        <select class="match-select" data-match="q61-4"><option value="">— выберите —</option><option value="a">Работа с Excel-файлами</option><option value="b">HTTP-запросы к API и сайтам</option><option value="c">Создание Telegram-ботов</option><option value="d">Парсинг HTML-документов</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q62 -->
+  <div class="question-card" data-q="62" data-type="match" data-correct="c,a,d,b">
+    <div class="question-header"><span class="question-num">Q 62</span><span class="question-text">Сопоставьте HTTP статус-код с его значением:</span></div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-item left-item">200</div>
+        <div class="match-item left-item">404</div>
+        <div class="match-item left-item">401</div>
+        <div class="match-item left-item">500</div>
+      </div>
+      <div class="match-right">
+        <select class="match-select" data-match="q62-1"><option value="">— выберите —</option><option value="a">Ресурс не найден</option><option value="b">Внутренняя ошибка сервера</option><option value="c">Успешный запрос</option><option value="d">Не авторизован</option></select>
+        <select class="match-select" data-match="q62-2"><option value="">— выберите —</option><option value="a">Ресурс не найден</option><option value="b">Внутренняя ошибка сервера</option><option value="c">Успешный запрос</option><option value="d">Не авторизован</option></select>
+        <select class="match-select" data-match="q62-3"><option value="">— выберите —</option><option value="a">Ресурс не найден</option><option value="b">Внутренняя ошибка сервера</option><option value="c">Успешный запрос</option><option value="d">Не авторизован</option></select>
+        <select class="match-select" data-match="q62-4"><option value="">— выберите —</option><option value="a">Ресурс не найден</option><option value="b">Внутренняя ошибка сервера</option><option value="c">Успешный запрос</option><option value="d">Не авторизован</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q63 -->
+  <div class="question-card" data-q="63" data-type="match" data-correct="d,c,a,b">
+    <div class="question-header"><span class="question-num">Q 63</span><span class="question-text">Сопоставьте инструмент с его категорией:</span></div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-item left-item">Selenium</div>
+        <div class="match-item left-item">Docker</div>
+        <div class="match-item left-item">smtplib</div>
+        <div class="match-item left-item">PyInstaller</div>
+      </div>
+      <div class="match-right">
+        <select class="match-select" data-match="q63-1"><option value="">— выберите —</option><option value="a">Email автоматизация</option><option value="b">Сборка исполняемых файлов</option><option value="c">Контейнеризация</option><option value="d">Браузерная автоматизация</option></select>
+        <select class="match-select" data-match="q63-2"><option value="">— выберите —</option><option value="a">Email автоматизация</option><option value="b">Сборка исполняемых файлов</option><option value="c">Контейнеризация</option><option value="d">Браузерная автоматизация</option></select>
+        <select class="match-select" data-match="q63-3"><option value="">— выберите —</option><option value="a">Email автоматизация</option><option value="b">Сборка исполняемых файлов</option><option value="c">Контейнеризация</option><option value="d">Браузерная автоматизация</option></select>
+        <select class="match-select" data-match="q63-4"><option value="">— выберите —</option><option value="a">Email автоматизация</option><option value="b">Сборка исполняемых файлов</option><option value="c">Контейнеризация</option><option value="d">Браузерная автоматизация</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q64 -->
+  <div class="question-card" data-q="64" data-type="match" data-correct="b,d,c,a">
+    <div class="question-header"><span class="question-num">Q 64</span><span class="question-text">Сопоставьте метод pandas с его описанием:</span></div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-item left-item">df.head()</div>
+        <div class="match-item left-item">df.describe()</div>
+        <div class="match-item left-item">df.dropna()</div>
+        <div class="match-item left-item">df.merge()</div>
+      </div>
+      <div class="match-right">
+        <select class="match-select" data-match="q64-1"><option value="">— выберите —</option><option value="a">Объединение двух DataFrame</option><option value="b">Первые N строк</option><option value="c">Удаление строк с NaN</option><option value="d">Статистика по числовым столбцам</option></select>
+        <select class="match-select" data-match="q64-2"><option value="">— выберите —</option><option value="a">Объединение двух DataFrame</option><option value="b">Первые N строк</option><option value="c">Удаление строк с NaN</option><option value="d">Статистика по числовым столбцам</option></select>
+        <select class="match-select" data-match="q64-3"><option value="">— выберите —</option><option value="a">Объединение двух DataFrame</option><option value="b">Первые N строк</option><option value="c">Удаление строк с NaN</option><option value="d">Статистика по числовым столбцам</option></select>
+        <select class="match-select" data-match="q64-4"><option value="">— выберите —</option><option value="a">Объединение двух DataFrame</option><option value="b">Первые N строк</option><option value="c">Удаление строк с NaN</option><option value="d">Статистика по числовым столбцам</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q65 -->
+  <div class="question-card" data-q="65" data-type="match" data-correct="c,a,d,b">
+    <div class="question-header"><span class="question-num">Q 65</span><span class="question-text">Сопоставьте команду Docker с её действием:</span></div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-item left-item">docker build</div>
+        <div class="match-item left-item">docker pull</div>
+        <div class="match-item left-item">docker ps</div>
+        <div class="match-item left-item">docker logs</div>
+      </div>
+      <div class="match-right">
+        <select class="match-select" data-match="q65-1"><option value="">— выберите —</option><option value="a">Скачивание образа из registry</option><option value="b">Просмотр логов контейнера</option><option value="c">Создание образа из Dockerfile</option><option value="d">Список запущенных контейнеров</option></select>
+        <select class="match-select" data-match="q65-2"><option value="">— выберите —</option><option value="a">Скачивание образа из registry</option><option value="b">Просмотр логов контейнера</option><option value="c">Создание образа из Dockerfile</option><option value="d">Список запущенных контейнеров</option></select>
+        <select class="match-select" data-match="q65-3"><option value="">— выберите —</option><option value="a">Скачивание образа из registry</option><option value="b">Просмотр логов контейнера</option><option value="c">Создание образа из Dockerfile</option><option value="d">Список запущенных контейнеров</option></select>
+        <select class="match-select" data-match="q65-4"><option value="">— выберите —</option><option value="a">Скачивание образа из registry</option><option value="b">Просмотр логов контейнера</option><option value="c">Создание образа из Dockerfile</option><option value="d">Список запущенных контейнеров</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q66 -->
+  <div class="question-card" data-q="66" data-type="match" data-correct="d,b,a,c">
+    <div class="question-header"><span class="question-num">Q 66</span><span class="question-text">Сопоставьте модуль Python с его функцией:</span></div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-item left-item">zipfile</div>
+        <div class="match-item left-item">csv</div>
+        <div class="match-item left-item">json</div>
+        <div class="match-item left-item">re</div>
+      </div>
+      <div class="match-right">
+        <select class="match-select" data-match="q66-1"><option value="">— выберите —</option><option value="a">Сериализация/десериализация JSON</option><option value="b">Чтение и запись CSV-файлов</option><option value="c">Регулярные выражения</option><option value="d">Работа с ZIP-архивами</option></select>
+        <select class="match-select" data-match="q66-2"><option value="">— выберите —</option><option value="a">Сериализация/десериализация JSON</option><option value="b">Чтение и запись CSV-файлов</option><option value="c">Регулярные выражения</option><option value="d">Работа с ZIP-архивами</option></select>
+        <select class="match-select" data-match="q66-3"><option value="">— выберите —</option><option value="a">Сериализация/десериализация JSON</option><option value="b">Чтение и запись CSV-файлов</option><option value="c">Регулярные выражения</option><option value="d">Работа с ZIP-архивами</option></select>
+        <select class="match-select" data-match="q66-4"><option value="">— выберите —</option><option value="a">Сериализация/десериализация JSON</option><option value="b">Чтение и запись CSV-файлов</option><option value="c">Регулярные выражения</option><option value="d">Работа с ZIP-архивами</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q67 -->
+  <div class="question-card" data-q="67" data-type="match" data-correct="b,d,c,a">
+    <div class="question-header"><span class="question-num">Q 67</span><span class="question-text">Сопоставьте тип Telegram-хендлера с ситуацией использования:</span></div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-item left-item">CommandHandler</div>
+        <div class="match-item left-item">MessageHandler</div>
+        <div class="match-item left-item">CallbackQueryHandler</div>
+        <div class="match-item left-item">ConversationHandler</div>
+      </div>
+      <div class="match-right">
+        <select class="match-select" data-match="q67-1"><option value="">— выберите —</option><option value="a">Многошаговый диалог с пользователем</option><option value="b">Обработка команды /start</option><option value="c">Нажатие inline-кнопки</option><option value="d">Получение любого текста от пользователя</option></select>
+        <select class="match-select" data-match="q67-2"><option value="">— выберите —</option><option value="a">Многошаговый диалог с пользователем</option><option value="b">Обработка команды /start</option><option value="c">Нажатие inline-кнопки</option><option value="d">Получение любого текста от пользователя</option></select>
+        <select class="match-select" data-match="q67-3"><option value="">— выберите —</option><option value="a">Многошаговый диалог с пользователем</option><option value="b">Обработка команды /start</option><option value="c">Нажатие inline-кнопки</option><option value="d">Получение любого текста от пользователя</option></select>
+        <select class="match-select" data-match="q67-4"><option value="">— выберите —</option><option value="a">Многошаговый диалог с пользователем</option><option value="b">Обработка команды /start</option><option value="c">Нажатие inline-кнопки</option><option value="d">Получение любого текста от пользователя</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q68 -->
+  <div class="question-card" data-q="68" data-type="match" data-correct="c,a,d,b">
+    <div class="question-header"><span class="question-num">Q 68</span><span class="question-text">Сопоставьте pathlib-метод с его возвращаемым значением:</span></div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-item left-item">Path.stem</div>
+        <div class="match-item left-item">Path.parent</div>
+        <div class="match-item left-item">Path.name</div>
+        <div class="match-item left-item">Path.suffix</div>
+      </div>
+      <div class="match-right">
+        <select class="match-select" data-match="q68-1"><option value="">— выберите —</option><option value="a">Родительская директория</option><option value="b">Расширение файла (.txt)</option><option value="c">Имя без расширения</option><option value="d">Полное имя файла с расширением</option></select>
+        <select class="match-select" data-match="q68-2"><option value="">— выберите —</option><option value="a">Родительская директория</option><option value="b">Расширение файла (.txt)</option><option value="c">Имя без расширения</option><option value="d">Полное имя файла с расширением</option></select>
+        <select class="match-select" data-match="q68-3"><option value="">— выберите —</option><option value="a">Родительская директория</option><option value="b">Расширение файла (.txt)</option><option value="c">Имя без расширения</option><option value="d">Полное имя файла с расширением</option></select>
+        <select class="match-select" data-match="q68-4"><option value="">— выберите —</option><option value="a">Родительская директория</option><option value="b">Расширение файла (.txt)</option><option value="c">Имя без расширения</option><option value="d">Полное имя файла с расширением</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q69 -->
+  <div class="question-card" data-q="69" data-type="match" data-correct="b,c,a,d">
+    <div class="question-header"><span class="question-num">Q 69</span><span class="question-text">Сопоставьте переменную окружения с её типичным назначением:</span></div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-item left-item">BOT_TOKEN</div>
+        <div class="match-item left-item">DB_PASSWORD</div>
+        <div class="match-item left-item">API_KEY</div>
+        <div class="match-item left-item">LOG_LEVEL</div>
+      </div>
+      <div class="match-right">
+        <select class="match-select" data-match="q69-1"><option value="">— выберите —</option><option value="a">Ключ доступа к внешнему API</option><option value="b">Токен Telegram-бота</option><option value="c">Пароль базы данных</option><option value="d">Уровень логирования (DEBUG/INFO)</option></select>
+        <select class="match-select" data-match="q69-2"><option value="">— выберите —</option><option value="a">Ключ доступа к внешнему API</option><option value="b">Токен Telegram-бота</option><option value="c">Пароль базы данных</option><option value="d">Уровень логирования (DEBUG/INFO)</option></select>
+        <select class="match-select" data-match="q69-3"><option value="">— выберите —</option><option value="a">Ключ доступа к внешнему API</option><option value="b">Токен Telegram-бота</option><option value="c">Пароль базы данных</option><option value="d">Уровень логирования (DEBUG/INFO)</option></select>
+        <select class="match-select" data-match="q69-4"><option value="">— выберите —</option><option value="a">Ключ доступа к внешнему API</option><option value="b">Токен Telegram-бота</option><option value="c">Пароль базы данных</option><option value="d">Уровень логирования (DEBUG/INFO)</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q70 -->
+  <div class="question-card" data-q="70" data-type="match" data-correct="d,c,b,a">
+    <div class="question-header"><span class="question-num">Q 70</span><span class="question-text">Сопоставьте Git-команду с её действием:</span></div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-item left-item">git clone</div>
+        <div class="match-item left-item">git commit -m</div>
+        <div class="match-item left-item">git push</div>
+        <div class="match-item left-item">git pull</div>
+      </div>
+      <div class="match-right">
+        <select class="match-select" data-match="q70-1"><option value="">— выберите —</option><option value="a">Получение изменений с удалённого репозитория</option><option value="b">Отправка изменений на удалённый репозиторий</option><option value="c">Создание коммита с сообщением</option><option value="d">Копирование репозитория</option></select>
+        <select class="match-select" data-match="q70-2"><option value="">— выберите —</option><option value="a">Получение изменений с удалённого репозитория</option><option value="b">Отправка изменений на удалённый репозиторий</option><option value="c">Создание коммита с сообщением</option><option value="d">Копирование репозитория</option></select>
+        <select class="match-select" data-match="q70-3"><option value="">— выберите —</option><option value="a">Получение изменений с удалённого репозитория</option><option value="b">Отправка изменений на удалённый репозиторий</option><option value="c">Создание коммита с сообщением</option><option value="d">Копирование репозитория</option></select>
+        <select class="match-select" data-match="q70-4"><option value="">— выберите —</option><option value="a">Получение изменений с удалённого репозитория</option><option value="b">Отправка изменений на удалённый репозиторий</option><option value="c">Создание коммита с сообщением</option><option value="d">Копирование репозитория</option></select>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- PART 5: True/False -->
+  <div class="section-divider">
+    <h2>ЧАСТЬ V — ВЕРНО / НЕВЕРНО</h2>
+    <p>Вопросы 71–80 · Определите, верно ли утверждение</p>
+  </div>
+
+  <div class="question-card" data-q="71" data-type="tf" data-correct="true">
+    <div class="question-header"><span class="question-num">Q 71</span><span class="question-text">Python виртуальное окружение (venv) можно удалить, просто удалив папку venv.</span></div>
+    <div class="tf-options">
+      <button class="tf-btn" data-val="true" data-q="71">✓ ВЕРНО</button>
+      <button class="tf-btn" data-val="false" data-q="71">✗ НЕВЕРНО</button>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="72" data-type="tf" data-correct="false">
+    <div class="question-header"><span class="question-num">Q 72</span><span class="question-text">Функция <code>requests.get()</code> автоматически следует по редиректам и отключить это поведение нельзя.</span></div>
+    <div class="tf-options">
+      <button class="tf-btn" data-val="true" data-q="72">✓ ВЕРНО</button>
+      <button class="tf-btn" data-val="false" data-q="72">✗ НЕВЕРНО</button>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="73" data-type="tf" data-correct="true">
+    <div class="question-header"><span class="question-num">Q 73</span><span class="question-text">Библиотека pandas является надстройкой над NumPy и использует его массивы внутри.</span></div>
+    <div class="tf-options">
+      <button class="tf-btn" data-val="true" data-q="73">✓ ВЕРНО</button>
+      <button class="tf-btn" data-val="false" data-q="73">✗ НЕВЕРНО</button>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="74" data-type="tf" data-correct="false">
+    <div class="question-header"><span class="question-num">Q 74</span><span class="question-text">PyInstaller при сборке .exe полностью обфусцирует исходный код, делая его невозможным для декомпиляции.</span></div>
+    <div class="tf-options">
+      <button class="tf-btn" data-val="true" data-q="74">✓ ВЕРНО</button>
+      <button class="tf-btn" data-val="false" data-q="74">✗ НЕВЕРНО</button>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="75" data-type="tf" data-correct="true">
+    <div class="question-header"><span class="question-num">Q 75</span><span class="question-text">Docker-контейнер, запущенный без флага <code>-v</code>, не сохраняет данные после остановки (без persistent volume).</span></div>
+    <div class="tf-options">
+      <button class="tf-btn" data-val="true" data-q="75">✓ ВЕРНО</button>
+      <button class="tf-btn" data-val="false" data-q="75">✗ НЕВЕРНО</button>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="76" data-type="tf" data-correct="false">
+    <div class="question-header"><span class="question-num">Q 76</span><span class="question-text">BeautifulSoup умеет самостоятельно выполнять JavaScript и получать динамически загруженный контент.</span></div>
+    <div class="tf-options">
+      <button class="tf-btn" data-val="true" data-q="76">✓ ВЕРНО</button>
+      <button class="tf-btn" data-val="false" data-q="76">✗ НЕВЕРНО</button>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="77" data-type="tf" data-correct="true">
+    <div class="question-header"><span class="question-num">Q 77</span><span class="question-text">Telegram-бот может отправлять сообщения пользователю только после того, как пользователь сам написал боту первым.</span></div>
+    <div class="tf-options">
+      <button class="tf-btn" data-val="true" data-q="77">✓ ВЕРНО</button>
+      <button class="tf-btn" data-val="false" data-q="77">✗ НЕВЕРНО</button>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="78" data-type="tf" data-correct="false">
+    <div class="question-header"><span class="question-num">Q 78</span><span class="question-text">Переменные из файла <code>.env</code> автоматически загружаются в Python без дополнительных библиотек.</span></div>
+    <div class="tf-options">
+      <button class="tf-btn" data-val="true" data-q="78">✓ ВЕРНО</button>
+      <button class="tf-btn" data-val="false" data-q="78">✗ НЕВЕРНО</button>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="79" data-type="tf" data-correct="true">
+    <div class="question-header"><span class="question-num">Q 79</span><span class="question-text">Функция <code>shutil.move()</code> может перемещать файлы между разными дисками (например, с C: на D:) на Windows.</span></div>
+    <div class="tf-options">
+      <button class="tf-btn" data-val="true" data-q="79">✓ ВЕРНО</button>
+      <button class="tf-btn" data-val="false" data-q="79">✗ НЕВЕРНО</button>
+    </div>
+  </div>
+
+  <div class="question-card" data-q="80" data-type="tf" data-correct="false">
+    <div class="question-header"><span class="question-num">Q 80</span><span class="question-text">GitHub Actions workflow может запускаться только при push в репозиторий — другие триггеры не поддерживаются.</span></div>
+    <div class="tf-options">
+      <button class="tf-btn" data-val="true" data-q="80">✓ ВЕРНО</button>
+      <button class="tf-btn" data-val="false" data-q="80">✗ НЕВЕРНО</button>
+    </div>
+  </div>
+
+
+  <!-- Submit -->
+  <div class="exam-submit-wrap">
+    <p style="font-family:var(--font-code); color:var(--text-muted); font-size:0.8rem; margin-bottom:20px;">
+      Ответьте на все вопросы перед отправкой
+    </p>
+    <button class="btn-submit" id="btn-submit">
+      <i class="fas fa-check-circle"></i> Завершить экзамен
+    </button>
+  </div>
+
+</div>
+
+<!-- ═══ RESULTS ═══ -->
+<div class="results-panel" id="results-panel">
+  <div class="results-score" id="res-score">0</div>
+  <div class="results-max">из 80 баллов</div>
+  <div class="results-grade" id="res-grade"></div>
+  <p class="results-desc" id="res-desc"></p>
+  <div class="results-breakdown">
+    <div class="breakdown-item"><div class="breakdown-label">ОДИНОЧНЫЙ ВЫБОР</div><div class="breakdown-val" id="b1">—</div></div>
+    <div class="breakdown-item"><div class="breakdown-label">МНОЖЕСТВЕННЫЙ ВЫБОР</div><div class="breakdown-val" id="b2">—</div></div>
+    <div class="breakdown-item"><div class="breakdown-label">РАССТАНОВКА ИЕРАРХИИ</div><div class="breakdown-val" id="b3">—</div></div>
+    <div class="breakdown-item"><div class="breakdown-label">СОПОСТАВЛЕНИЕ</div><div class="breakdown-val" id="b4">—</div></div>
+    <div class="breakdown-item"><div class="breakdown-label">ВЕРНО/НЕВЕРНО</div><div class="breakdown-val" id="b5">—</div></div>
+  </div>
+  <div>
+    <button class="btn-retry" onclick="location.reload()"><i class="fas fa-redo"></i> Пересдать</button>
+    <a href="index.html" class="btn-home"><i class="fas fa-home"></i> На главную</a>
+  </div>
+</div>
+
+<script>
+// ── Start Exam ──
+document.getElementById('btn-start').addEventListener('click', () => {
+  document.getElementById('exam-hero').style.display = 'none';
+  document.getElementById('exam-container').classList.add('visible');
+  document.getElementById('exam-progress-wrap').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProgress();
+});
+
+// ── Progress ──
+function updateProgress() {
+  const total = 80;
+  let answered = 0;
+
+  document.querySelectorAll('[data-q]').forEach(card => {
+    const type = card.dataset.type;
+    if (type === 'single') {
+      if (card.querySelector('input[type=radio]:checked')) answered++;
+    } else if (type === 'multi') {
+      if (card.querySelector('input[type=checkbox]:checked')) answered++;
+    } else if (type === 'rank') {
+      answered++; // always partially answered
+    } else if (type === 'match') {
+      const selects = card.querySelectorAll('select');
+      if ([...selects].some(s => s.value)) answered++;
+    } else if (type === 'tf') {
+      if (card.querySelector('.tf-btn.selected-true, .tf-btn.selected-false')) answered++;
+    }
+  });
+
+  const fill = document.getElementById('exam-progress-fill');
+  const count = document.getElementById('exam-progress-count');
+  const navProg = document.getElementById('nav-prog');
+  const pct = Math.round(answered / total * 100);
+  if (fill) fill.style.width = pct + '%';
+  if (count) count.textContent = answered + ' / ' + total;
+  if (navProg) navProg.style.width = pct + '%';
+}
+
+document.addEventListener('change', updateProgress);
+
+// ── Radio / Checkbox visual ──
+document.querySelectorAll('.option-label input').forEach(input => {
+  input.addEventListener('change', () => {
+    const name = input.name;
+    if (input.type === 'radio') {
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => r.closest('.option-label').classList.remove('selected'));
+    }
+    if (input.checked) input.closest('.option-label').classList.add('selected');
+    else input.closest('.option-label').classList.remove('selected');
+    input.closest('.question-card').classList.add('answered');
+  });
+});
+
+// ── True/False ──
+document.querySelectorAll('.tf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const q = btn.dataset.q;
+    document.querySelectorAll(`.tf-btn[data-q="${q}"]`).forEach(b => { b.classList.remove('selected-true','selected-false'); });
+    btn.classList.add(btn.dataset.val === 'true' ? 'selected-true' : 'selected-false');
+    btn.closest('.question-card').classList.add('answered');
+    updateProgress();
+  });
+});
+
+// ── Drag & Drop Rank ──
+document.querySelectorAll('.rank-list').forEach(list => {
+  let dragged = null;
+  list.querySelectorAll('.rank-item').forEach(item => {
+    item.addEventListener('dragstart', () => { dragged = item; item.classList.add('dragging'); });
+    item.addEventListener('dragend', () => { item.classList.remove('dragging'); dragged = null; updateRankNums(list); });
+    item.addEventListener('dragover', e => { e.preventDefault(); item.classList.add('drag-over'); });
+    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      item.classList.remove('drag-over');
+      if (dragged && dragged !== item) {
+        const items = [...list.querySelectorAll('.rank-item')];
+        const di = items.indexOf(dragged);
+        const ii = items.indexOf(item);
+        if (di < ii) list.insertBefore(dragged, item.nextSibling);
+        else list.insertBefore(dragged, item);
+        updateRankNums(list);
+      }
+    });
+  });
+});
+
+function updateRankNums(list) {
+  list.querySelectorAll('.rank-item').forEach((item, i) => {
+    item.querySelector('.rank-num').textContent = i + 1;
+  });
+}
+
+// ── Submit & Grade ──
+document.getElementById('btn-submit').addEventListener('click', () => {
+  let score = 0;
+  let s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0;
+
+  document.querySelectorAll('[data-q]').forEach(card => {
+    const type = card.dataset.type;
+    const correct = card.dataset.correct;
+    const q = card.dataset.q;
+
+    if (type === 'single') {
+      const checked = card.querySelector('input[type=radio]:checked');
+      if (checked && checked.value === correct) { score++; s1++; }
+      // reveal
+      card.querySelectorAll('.option-label').forEach(label => {
+        const val = label.querySelector('input').value;
+        if (val === correct) label.classList.add('correct');
+        else if (checked && checked.value === val) label.classList.add('wrong');
+      });
+    }
+
+    else if (type === 'multi') {
+      const correctArr = correct.split(',');
+      const checked = [...card.querySelectorAll('input[type=checkbox]:checked')].map(i => i.value).sort();
+      const correctSorted = [...correctArr].sort();
+      if (JSON.stringify(checked) === JSON.stringify(correctSorted)) { score++; s2++; }
+      card.querySelectorAll('.option-label').forEach(label => {
+        const val = label.querySelector('input').value;
+        if (correctArr.includes(val)) label.classList.add('correct');
+        else if (label.querySelector('input').checked) label.classList.add('wrong');
+      });
+    }
+
+    else if (type === 'rank') {
+      const correctArr = correct.split(',');
+      const items = [...card.querySelectorAll('.rank-item')].map(i => i.dataset.val);
+      let allOk = items.length === correctArr.length;
+      if (allOk) items.forEach((v, i) => { if (v !== correctArr[i]) allOk = false; });
+      if (allOk) { score++; s3++; }
+    }
+
+    else if (type === 'match') {
+      const correctArr = correct.split(',');
+      const selects = card.querySelectorAll('select');
+      let allOk = true;
+      selects.forEach((sel, i) => { if (sel.value !== correctArr[i]) allOk = false; });
+      if (allOk) { score++; s4++; }
+    }
+
+    else if (type === 'tf') {
+      const selected = card.querySelector('.tf-btn.selected-true, .tf-btn.selected-false');
+      if (selected && selected.dataset.val === correct) { score++; s5++; }
+    }
+  });
+
+  // show results
+  document.getElementById('exam-container').style.display = 'none';
+  const panel = document.getElementById('results-panel');
+  panel.classList.add('visible');
+
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('b1').textContent = s1 + ' / 20';
+  document.getElementById('b2').textContent = s2 + ' / 20';
+  document.getElementById('b3').textContent = s3 + ' / 20';
+  document.getElementById('b4').textContent = s4 + ' / 10';
+  document.getElementById('b5').textContent = s5 + ' / 10';
+
+  const pct = Math.round(score / 80 * 100);
+  let grade, desc, color;
+  if (pct >= 90) { grade = '🏆 ОТЛИЧНО'; desc = 'Блестящий результат! Ты отлично усвоил все модули курса и готов к реальной практике Python-автоматизации.'; color = '#00ff88'; }
+  else if (pct >= 75) { grade = '✅ ХОРОШО'; desc = 'Крепкое знание материала. Несколько тем стоит повторить, но в целом ты уверенно владеешь Python-автоматизацией.'; color = '#00d4ff'; }
+  else if (pct >= 55) { grade = '📚 УДОВЛЕТВОРИТЕЛЬНО'; desc = 'Базовые знания есть, но ряд тем требует повторного изучения. Рекомендуем вернуться к лекциям и попробовать снова.'; color = '#ffd60a'; }
+  else { grade = '🔄 НУЖНО ПОВТОРИТЬ'; desc = 'Результат ниже ожидаемого. Не расстраивайся — вернись к лекциям, проработай практические задания и пересдай.'; color = '#ff6b35'; }
+
+  const gradeEl = document.getElementById('res-grade');
+  gradeEl.textContent = grade + ' · ' + pct + '%';
+  gradeEl.style.color = color;
+  document.getElementById('res-desc').textContent = desc;
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+</script>
+</body>
+</html>

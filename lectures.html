@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лекции — PyAuto Python Автоматизация</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23050a0f'/><text x='4' y='24' font-size='22'>🐍</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand"><span>🐍</span> PYAUTO</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Главная</a></li>
+    <li><a href="lectures.html" class="active">Лекции</a></li>
+    <li><a href="practice.html">Практика</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="practice.html" class="nav-cta">Практика →</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  <div class="nav-progress"></div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="section-label">/ лекции курса</div>
+    <h1 class="section-title">Python-автоматизация:<br><span class="text-accent">6 полных лекций</span></h1>
+    <p style="color:var(--text-secondary);max-width:600px;margin-top:12px;">Теория, примеры кода, разбор ошибок, мини-проекты и домашние задания. Всё что нужно для реальной автоматизации.</p>
+
+    <!-- Study Timer -->
+    <div style="margin-top:20px;display:flex;align-items:center;gap:12px;">
+      <span style="font-family:var(--font-code);font-size:0.75rem;color:var(--text-muted);">ВРЕМЯ ИЗУЧЕНИЯ:</span>
+      <span id="study-timer" style="font-family:var(--font-display);color:var(--accent-green);font-size:1rem;text-shadow:var(--glow-green);">00:00:00</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR LAYOUT -->
+<div class="sidebar-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <nav class="sidebar-nav" aria-label="Навигация по лекциям">
+      <div class="sidebar-nav-title">Навигация</div>
+      <a href="#lecture-1" class="sidebar-link active"><span class="sidebar-link-num">01</span> Основы Python</a>
+      <a href="#lecture-2" class="sidebar-link"><span class="sidebar-link-num">02</span> Файлы и папки</a>
+      <a href="#lecture-3" class="sidebar-link"><span class="sidebar-link-num">03</span> Excel и данные</a>
+      <a href="#lecture-4" class="sidebar-link"><span class="sidebar-link-num">04</span> Парсинг и API</a>
+      <a href="#lecture-5" class="sidebar-link"><span class="sidebar-link-num">05</span> Боты и планировщики</a>
+      <a href="#lecture-6" class="sidebar-link"><span class="sidebar-link-num">06</span> Деплой и .exe</a>
+
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border-dim);">
+        <a href="practice.html" class="btn btn-primary" style="width:100%;justify-content:center;font-size:0.82rem;padding:10px 16px;">
+          <i class="fas fa-code"></i> Практика
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- LECTURES CONTENT -->
+  <main class="lecture-content">
+
+    <!-- ═══════════════════════════════════════
+         ЛЕКЦИЯ 1: ОСНОВЫ PYTHON
+    ═══════════════════════════════════════ -->
+    <article class="lecture-section" id="lecture-1">
+      <div class="lecture-header">
+        <span class="lecture-num-badge">ЛЕКЦИЯ 01</span>
+        <h2>Основы Python для автоматизации</h2>
+      </div>
+
+      <p>Python — идеальный язык для автоматизации: простой синтаксис, тысячи готовых библиотек и огромное сообщество. В этой лекции мы заложим фундамент, который понадобится в каждом следующем модуле.</p>
+
+      <h3>Переменные и типы данных</h3>
+      <p>В автоматизации ты постоянно работаешь с именами файлов, путями, числами и флагами. Понимание типов данных — это основа.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># Переменные для автоматизации</span>
+<span class="py-kw">import</span> os
+<span class="py-kw">from</span> pathlib <span class="py-kw">import</span> Path
+<span class="py-kw">from</span> datetime <span class="py-kw">import</span> datetime
+
+<span class="py-cm"># Строки — пути, имена файлов, URL</span>
+source_folder <span class="py-op">=</span> <span class="py-str">"C:/Users/user/Downloads"</span>
+output_folder <span class="py-op">=</span> Path(<span class="py-str">"D:/Reports"</span>)
+api_url       <span class="py-op">=</span> <span class="py-str">"https://api.example.com/data"</span>
+
+<span class="py-cm"># Числа — счётчики, задержки, лимиты</span>
+max_retries   <span class="py-op">=</span> <span class="py-num">3</span>
+sleep_seconds <span class="py-op">=</span> <span class="py-num">1.5</span>
+batch_size    <span class="py-op">=</span> <span class="py-num">100</span>
+
+<span class="py-cm"># Булевы — флаги состояния</span>
+is_running   <span class="py-op">=</span> <span class="py-kw">True</span>
+debug_mode   <span class="py-op">=</span> <span class="py-kw">False</span>
+send_email   <span class="py-op">=</span> <span class="py-kw">True</span>
+
+<span class="py-cm"># F-строки — незаменимы для динамических путей</span>
+today        <span class="py-op">=</span> datetime.now()
+report_name  <span class="py-op">=</span> <span class="py-str">f"report_{today.strftime('%Y-%m-%d')}.xlsx"</span>
+log_file     <span class="py-op">=</span> <span class="py-str">f"logs/auto_{today.strftime('%Y%m%d_%H%M')}.log"</span>
+
+<span class="py-fn">print</span>(<span class="py-str">f"Отчёт будет сохранён как: {report_name}"</span>)
+<span class="py-cm"># Вывод: Отчёт будет сохранён как: report_2024-01-15.xlsx</span></pre>
+      </div>
+
+      <h3>Функции для переиспользования кода</h3>
+      <p>Хороший автоматизационный скрипт — это набор небольших функций, каждая из которых делает одно конкретное дело. Это позволяет легко тестировать, изменять и комбинировать логику.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-kw">import</span> os
+<span class="py-kw">import</span> logging
+<span class="py-kw">from</span> pathlib <span class="py-kw">import</span> Path
+<span class="py-kw">from</span> typing <span class="py-kw">import</span> Optional
+
+<span class="py-cm"># ✅ Принцип: одна функция — одна задача</span>
+
+<span class="py-kw">def</span> <span class="py-fn">ensure_dir</span>(path: <span class="py-cls">str</span>) -> <span class="py-cls">Path</span>:
+    <span class="py-dc">"""Создаёт директорию если не существует. Возвращает Path."""</span>
+    dir_path <span class="py-op">=</span> Path(path)
+    dir_path.mkdir(parents<span class="py-op">=</span><span class="py-kw">True</span>, exist_ok<span class="py-op">=</span><span class="py-kw">True</span>)
+    logging.info(<span class="py-str">f"Директория готова: {dir_path}"</span>)
+    <span class="py-kw">return</span> dir_path
+
+
+<span class="py-kw">def</span> <span class="py-fn">get_files_by_ext</span>(folder: <span class="py-cls">str</span>, ext: <span class="py-cls">str</span>) -> <span class="py-cls">list</span>:
+    <span class="py-dc">"""Возвращает список файлов с указанным расширением."""</span>
+    folder_path <span class="py-op">=</span> Path(folder)
+    <span class="py-kw">if not</span> folder_path.exists():
+        logging.warning(<span class="py-str">f"Папка не найдена: {folder}"</span>)
+        <span class="py-kw">return</span> []
+
+    files <span class="py-op">=</span> <span class="py-fn">list</span>(folder_path.glob(<span class="py-str">f"*.{ext.lstrip('.')}"</span>))
+    logging.info(<span class="py-str">f"Найдено {len(files)} файлов .{ext} в {folder}"</span>)
+    <span class="py-kw">return</span> files
+
+
+<span class="py-kw">def</span> <span class="py-fn">safe_move</span>(src: <span class="py-cls">str</span>, dst: <span class="py-cls">str</span>) -> <span class="py-cls">bool</span>:
+    <span class="py-dc">"""Безопасно перемещает файл. Возвращает True при успехе."""</span>
+    <span class="py-kw">try</span>:
+        src_path <span class="py-op">=</span> Path(src)
+        dst_path <span class="py-op">=</span> Path(dst)
+
+        <span class="py-kw">if not</span> src_path.exists():
+            <span class="py-kw">raise</span> <span class="py-cls">FileNotFoundError</span>(<span class="py-str">f"Файл не найден: {src}"</span>)
+
+        dst_path.parent.mkdir(parents<span class="py-op">=</span><span class="py-kw">True</span>, exist_ok<span class="py-op">=</span><span class="py-kw">True</span>)
+        src_path.rename(dst_path)
+        logging.info(<span class="py-str">f"✓ Перемещён: {src} → {dst}"</span>)
+        <span class="py-kw">return True</span>
+
+    <span class="py-kw">except Exception as</span> e:
+        logging.error(<span class="py-str">f"✗ Ошибка перемещения {src}: {e}"</span>)
+        <span class="py-kw">return False</span>
+
+
+<span class="py-cm"># Использование:</span>
+output_dir <span class="py-op">=</span> ensure_dir(<span class="py-str">"D:/Reports/2024/January"</span>)
+csv_files  <span class="py-op">=</span> get_files_by_ext(<span class="py-str">"C:/Downloads"</span>, <span class="py-str">"csv"</span>)
+
+<span class="py-kw">for</span> f <span class="py-kw">in</span> csv_files:
+    safe_move(<span class="py-fn">str</span>(f), <span class="py-fn">str</span>(output_dir <span class="py-op">/</span> f.name))</pre>
+      </div>
+
+      <h3>Циклы и условия в автоматизации</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-kw">import</span> time
+<span class="py-kw">from</span> pathlib <span class="py-kw">import</span> Path
+
+FILES_TO_PROCESS <span class="py-op">=</span> Path(<span class="py-str">"./data"</span>).glob(<span class="py-str">"*.csv"</span>)
+
+<span class="py-cm"># for — обработка каждого файла в директории</span>
+<span class="py-kw">for</span> file <span class="py-kw">in</span> FILES_TO_PROCESS:
+    size_kb <span class="py-op">=</span> file.stat().st_size <span class="py-op">/</span> <span class="py-num">1024</span>
+
+    <span class="py-cm"># if/elif/else — условная логика</span>
+    <span class="py-kw">if</span> size_kb <span class="py-op">></span> <span class="py-num">10_000</span>:          <span class="py-cm"># > 10 MB</span>
+        strategy <span class="py-op">=</span> <span class="py-str">"chunked"</span>         <span class="py-cm"># читаем по кускам</span>
+    <span class="py-kw">elif</span> size_kb <span class="py-op">></span> <span class="py-num">1_000</span>:           <span class="py-cm"># > 1 MB</span>
+        strategy <span class="py-op">=</span> <span class="py-str">"pandas"</span>           <span class="py-cm"># используем pandas</span>
+    <span class="py-kw">else</span>:
+        strategy <span class="py-op">=</span> <span class="py-str">"csv_reader"</span>       <span class="py-cm"># стандартный csv</span>
+
+    <span class="py-fn">print</span>(<span class="py-str">f"  {file.name:40s} {size_kb:8.1f} KB  [{strategy}]"</span>)
+
+<span class="py-cm"># while — бесконечный мониторинг (daemon-pattern)</span>
+POLL_INTERVAL <span class="py-op">=</span> <span class="py-num">60</span>  <span class="py-cm"># секунд</span>
+
+<span class="py-kw">def</span> <span class="py-fn">monitor_loop</span>():
+    <span class="py-fn">print</span>(<span class="py-str">"🔍 Мониторинг запущен. Нажми Ctrl+C для остановки."</span>)
+    <span class="py-kw">while True</span>:
+        <span class="py-kw">try</span>:
+            check_for_new_files()   <span class="py-cm"># твоя функция</span>
+            time.sleep(POLL_INTERVAL)
+        <span class="py-kw">except</span> <span class="py-cls">KeyboardInterrupt</span>:
+            <span class="py-fn">print</span>(<span class="py-str">"\n⛔ Мониторинг остановлен."</span>)
+            <span class="py-kw">break</span>
+        <span class="py-kw">except Exception as</span> e:
+            logging.error(<span class="py-str">f"Ошибка в цикле мониторинга: {e}"</span>)
+            time.sleep(<span class="py-num">10</span>)  <span class="py-cm"># ждём перед retry</span></pre>
+      </div>
+
+      <h3>Virtual Environment и pip — правильная организация проекта</h3>
+
+      <div class="info-box tip">
+        <span class="info-box-icon">💡</span>
+        <div class="info-box-content">
+          <strong>Золотое правило:</strong> каждый автоматизационный проект — отдельный venv. Никогда не устанавливай библиотеки в системный Python. Через месяц скрипты начнут конфликтовать между собой.
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">BASH / TERMINAL</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># Шаг 1: Создать виртуальное окружение</span>
+python -m venv venv
+
+<span class="py-cm"># Шаг 2: Активировать</span>
+<span class="py-cm"># Windows:</span>
+venv\Scripts\activate
+<span class="py-cm"># Mac/Linux:</span>
+source venv/bin/activate
+
+<span class="py-cm"># Шаг 3: Установить зависимости</span>
+pip install openpyxl pandas requests selenium python-telegram-bot
+
+<span class="py-cm"># Шаг 4: Зафиксировать версии (ОБЯЗАТЕЛЬНО!)</span>
+pip freeze > requirements.txt
+
+<span class="py-cm"># На другом компьютере — восстановить за 1 команду:</span>
+pip install -r requirements.txt</pre>
+      </div>
+
+      <h3>Структура профессионального проекта</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">СТРУКТУРА ПРОЕКТА</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre>my_automation/
+├── venv/                   <span class="py-cm"># виртуальное окружение (в .gitignore!)</span>
+├── src/
+│   ├── __init__.py
+│   ├── config.py           <span class="py-cm"># настройки проекта</span>
+│   ├── file_ops.py         <span class="py-cm"># работа с файлами</span>
+│   ├── excel_ops.py        <span class="py-cm"># работа с Excel</span>
+│   └── notifier.py         <span class="py-cm"># уведомления (email, telegram)</span>
+├── tests/
+│   └── test_file_ops.py
+├── logs/                   <span class="py-cm"># логи (в .gitignore)</span>
+├── data/
+│   ├── input/              <span class="py-cm"># входные файлы</span>
+│   └── output/             <span class="py-cm"># результаты</span>
+├── .env                    <span class="py-cm"># секреты: токены, пароли (в .gitignore!)</span>
+├── .gitignore
+├── requirements.txt
+├── config.yaml
+└── main.py                 <span class="py-cm"># точка входа</span></pre>
+      </div>
+
+      <h3>Логирование — твой лучший друг в автоматизации</h3>
+      <p>Скрипт будет работать ночью, в выходные, без тебя рядом. Без логов ты никогда не узнаешь, что пошло не так. Logging — обязательный элемент любого production-скрипта.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — logging_setup.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-kw">import</span> logging
+<span class="py-kw">import</span> sys
+<span class="py-kw">from</span> pathlib <span class="py-kw">import</span> Path
+<span class="py-kw">from</span> datetime <span class="py-kw">import</span> datetime
+
+
+<span class="py-kw">def</span> <span class="py-fn">setup_logging</span>(log_dir: <span class="py-cls">str</span> <span class="py-op">=</span> <span class="py-str">"logs"</span>, level: <span class="py-cls">str</span> <span class="py-op">=</span> <span class="py-str">"INFO"</span>) -> <span class="py-kw">None</span>:
+    <span class="py-dc">"""
+    Настраивает логирование в файл И консоль одновременно.
+    Файл: logs/script_2024-01-15.log
+    """</span>
+    log_path <span class="py-op">=</span> Path(log_dir)
+    log_path.mkdir(exist_ok<span class="py-op">=</span><span class="py-kw">True</span>)
+
+    log_file <span class="py-op">=</span> log_path <span class="py-op">/</span> <span class="py-str">f"script_{datetime.now().strftime('%Y-%m-%d')}.log"</span>
+
+    <span class="py-cm"># Формат: [ВРЕМЯ] [УРОВЕНЬ] [ФАЙЛ:СТРОКА] — СООБЩЕНИЕ</span>
+    fmt <span class="py-op">=</span> <span class="py-str">"%(asctime)s [%(levelname)8s] %(filename)s:%(lineno)d — %(message)s"</span>
+
+    logging.basicConfig(
+        level<span class="py-op">=</span><span class="py-fn">getattr</span>(logging, level.upper()),
+        format<span class="py-op">=</span>fmt,
+        datefmt<span class="py-op">=</span><span class="py-str">"%H:%M:%S"</span>,
+        handlers<span class="py-op">=</span>[
+            logging.FileHandler(log_file, encoding<span class="py-op">=</span><span class="py-str">"utf-8"</span>),
+            logging.StreamHandler(sys.stdout),
+        ],
+    )
+    logging.info(<span class="py-str">f"📝 Логирование запущено. Файл: {log_file}"</span>)
+
+
+<span class="py-cm"># В main.py — первая строка после импортов:</span>
+<span class="py-kw">if</span> __name__ <span class="py-op">==</span> <span class="py-str">"__main__"</span>:
+    setup_logging(level<span class="py-op">=</span><span class="py-str">"DEBUG"</span>)
+
+    logging.debug(<span class="py-str">"Детальная отладочная информация"</span>)
+    logging.info(<span class="py-str">"✅ Скрипт запущен успешно"</span>)
+    logging.warning(<span class="py-str">"⚠️ Папка почти заполнена (85%)"</span>)
+    logging.error(<span class="py-str">"❌ Не удалось подключиться к API"</span>)
+    logging.critical(<span class="py-str">"💀 База данных недоступна, останов"</span>)</pre>
+      </div>
+
+      <div class="info-box warn">
+        <span class="info-box-icon">⚠️</span>
+        <div class="info-box-content">
+          <strong>Типичная ошибка:</strong> использовать <code>print()</code> вместо <code>logging</code> в production-скриптах. <code>print</code> не пишет в файл, не добавляет временную метку и не имеет уровней важности. Всегда используй <code>logging</code>.
+        </div>
+      </div>
+
+      <div class="remember-block">
+        <div class="remember-title">🧠 ЧТО ВАЖНО ЗАПОМНИТЬ</div>
+        <ul>
+          <li>Каждый проект — отдельный venv. Никаких исключений.</li>
+          <li>Всегда <code>requirements.txt</code> в git-репозитории.</li>
+          <li>Функции — маленькие, с docstring и аннотациями типов.</li>
+          <li>logging вместо print в любом скрипте, который работает автономно.</li>
+          <li>Секреты (токены, пароли) — только через <code>.env</code>, никогда в коде.</li>
+          <li>Структура проекта: src/, logs/, data/, tests/ — до написания первой строки.</li>
+        </ul>
+      </div>
+
+      <div class="hw-block">
+        <div class="hw-title">📚 ДОМАШНЕЕ ЗАДАНИЕ</div>
+        <p>Создай Python-проект с правильной структурой: venv, requirements.txt, src/, logs/, main.py.</p>
+        <p>Напиши функцию <code>organize_desktop()</code> которая: сканирует рабочий стол, считает файлы по расширениям, и выводит отчёт в лог. Пример вывода: <code>INFO — .docx: 5 файлов, .pdf: 3 файла, .xlsx: 8 файлов</code>.</p>
+      </div>
+
+      <div class="lecture-nav">
+        <span></span>
+        <button class="btn btn-primary lecture-nav-btn" data-dir="next">
+          Лекция 2: Файлы и папки <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════════════
+         ЛЕКЦИЯ 2: ФАЙЛЫ И ПАПКИ
+    ═══════════════════════════════════════ -->
+    <article class="lecture-section" id="lecture-2">
+      <div class="lecture-header">
+        <span class="lecture-num-badge">ЛЕКЦИЯ 02</span>
+        <h2>Автоматизация файлов и папок</h2>
+      </div>
+
+      <p>Работа с файловой системой — самый востребованный тип автоматизации. Переименование тысяч файлов, сортировка загрузок, бэкапы, мониторинг папок — всё это делается за несколько строк на Python.</p>
+
+      <h3>Три способа работать с путями</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Модуль</th><th>Плюсы</th><th>Когда использовать</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>os.path</code></td><td>Везде есть в Python</td><td>Простые операции, совместимость</td></tr>
+          <tr><td><code>pathlib.Path</code></td><td>ООП-стиль, читаемый</td><td>Современный стандарт, всегда предпочтительнее</td></tr>
+          <tr><td><code>shutil</code></td><td>Копирование, перемещение</td><td>Когда нужно перемещать/копировать файлы</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — pathlib_basics.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-kw">from</span> pathlib <span class="py-kw">import</span> Path
+<span class="py-kw">import</span> os
+
+<span class="py-cm"># pathlib — современный способ (рекомендуется)</span>
+p <span class="py-op">=</span> Path(<span class="py-str">"C:/Users/user/Documents/report.xlsx"</span>)
+
+<span class="py-fn">print</span>(p.name)       <span class="py-cm"># report.xlsx</span>
+<span class="py-fn">print</span>(p.stem)       <span class="py-cm"># report</span>
+<span class="py-fn">print</span>(p.suffix)     <span class="py-cm"># .xlsx</span>
+<span class="py-fn">print</span>(p.parent)     <span class="py-cm"># C:\Users\user\Documents</span>
+<span class="py-fn">print</span>(p.exists())   <span class="py-cm"># True / False</span>
+<span class="py-fn">print</span>(p.stat().st_size)  <span class="py-cm"># размер в байтах</span>
+
+<span class="py-cm"># Построение пути через / (работает на всех ОС!)</span>
+base    <span class="py-op">=</span> Path(<span class="py-str">"D:/Projects"</span>)
+reports <span class="py-op">=</span> base <span class="py-op">/</span> <span class="py-str">"reports"</span> <span class="py-op">/</span> <span class="py-str">"2024"</span>  <span class="py-cm"># D:\Projects\reports\2024</span>
+reports.mkdir(parents<span class="py-op">=</span><span class="py-kw">True</span>, exist_ok<span class="py-op">=</span><span class="py-kw">True</span>)
+
+<span class="py-cm"># Глобальный поиск файлов</span>
+<span class="py-kw">for</span> f <span class="py-kw">in</span> Path(<span class="py-str">"."</span>).glob(<span class="py-str">"**/*.py"</span>):  <span class="py-cm"># рекурсивно все .py</span>
+    <span class="py-fn">print</span>(f.relative_to(Path(<span class="py-str">"."</span>)))</pre>
+      </div>
+
+      <h3>Автоматическая сортировка файлов</h3>
+      <p>Классический кейс: папка "Загрузки" захламлена сотнями файлов разных типов. Скрипт за секунды раскладывает их по папкам.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — file_sorter.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-kw">import</span> shutil
+<span class="py-kw">import</span> logging
+<span class="py-kw">from</span> pathlib <span class="py-kw">import</span> Path
+<span class="py-kw">from</span> datetime <span class="py-kw">import</span> datetime
+
+<span class="py-cm"># Маппинг расширений → папки</span>
+FILE_CATEGORIES: <span class="py-cls">dict</span>[<span class="py-cls">str</span>, <span class="py-cls">list</span>[<span class="py-cls">str</span>]] <span class="py-op">=</span> {
+    <span class="py-str">"📄 Документы"</span>:  [<span class="py-str">".pdf"</span>, <span class="py-str">".doc"</span>, <span class="py-str">".docx"</span>, <span class="py-str">".txt"</span>, <span class="py-str">".odt"</span>],
+    <span class="py-str">"📊 Таблицы"</span>:    [<span class="py-str">".xls"</span>, <span class="py-str">".xlsx"</span>, <span class="py-str">".csv"</span>, <span class="py-str">".ods"</span>],
+    <span class="py-str">"🖼️ Изображения"</span>:[<span class="py-str">".jpg"</span>, <span class="py-str">".jpeg"</span>, <span class="py-str">".png"</span>, <span class="py-str">".gif"</span>, <span class="py-str">".webp"</span>],
+    <span class="py-str">"🎬 Видео"</span>:      [<span class="py-str">".mp4"</span>, <span class="py-str">".mkv"</span>, <span class="py-str">".avi"</span>, <span class="py-str">".mov"</span>],
+    <span class="py-str">"🎵 Музыка"</span>:     [<span class="py-str">".mp3"</span>, <span class="py-str">".flac"</span>, <span class="py-str">".wav"</span>, <span class="py-str">".ogg"</span>],
+    <span class="py-str">"📦 Архивы"</span>:     [<span class="py-str">".zip"</span>, <span class="py-str">".rar"</span>, <span class="py-str">".7z"</span>, <span class="py-str">".tar"</span>, <span class="py-str">".gz"</span>],
+    <span class="py-str">"💻 Программы"</span>:  [<span class="py-str">".exe"</span>, <span class="py-str">".msi"</span>, <span class="py-str">".dmg"</span>, <span class="py-str">".deb"</span>],
+    <span class="py-str">"🐍 Код"</span>:        [<span class="py-str">".py"</span>, <span class="py-str">".js"</span>, <span class="py-str">".html"</span>, <span class="py-str">".css"</span>, <span class="py-str">".json"</span>],
+}
+
+<span class="py-kw">def</span> <span class="py-fn">sort_downloads</span>(source_dir: <span class="py-cls">str</span>) -> <span class="py-cls">dict</span>:
+    <span class="py-dc">"""
+    Сортирует файлы из source_dir по категориям.
+    Возвращает статистику: {'📄 Документы': 5, ...}
+    """</span>
+    source <span class="py-op">=</span> Path(source_dir)
+    stats  <span class="py-op">=</span> {}
+    errors <span class="py-op">=</span> <span class="py-num">0</span>
+
+    <span class="py-cm"># Строим обратный маппинг: .pdf → '📄 Документы'</span>
+    ext_map: <span class="py-cls">dict</span>[<span class="py-cls">str</span>, <span class="py-cls">str</span>] <span class="py-op">=</span> {}
+    <span class="py-kw">for</span> category, exts <span class="py-kw">in</span> FILE_CATEGORIES.items():
+        <span class="py-kw">for</span> ext <span class="py-kw">in</span> exts:
+            ext_map[ext] <span class="py-op">=</span> category
+
+    <span class="py-kw">for</span> file <span class="py-kw">in</span> source.iterdir():
+        <span class="py-kw">if not</span> file.is_file() <span class="py-kw">or</span> file.name.startswith(<span class="py-str">"."</span>):
+            <span class="py-kw">continue</span>
+
+        category <span class="py-op">=</span> ext_map.get(file.suffix.lower(), <span class="py-str">"❓ Прочее"</span>)
+        dest_dir <span class="py-op">=</span> source <span class="py-op">/</span> category
+        dest_dir.mkdir(exist_ok<span class="py-op">=</span><span class="py-kw">True</span>)
+
+        dest_file <span class="py-op">=</span> dest_dir <span class="py-op">/</span> file.name
+        <span class="py-kw">if</span> dest_file.exists():   <span class="py-cm"># если файл уже есть — добавляем timestamp</span>
+            ts <span class="py-op">=</span> datetime.now().strftime(<span class="py-str">"%H%M%S"</span>)
+            dest_file <span class="py-op">=</span> dest_dir <span class="py-op">/</span> <span class="py-str">f"{file.stem}_{ts}{file.suffix}"</span>
+
+        <span class="py-kw">try</span>:
+            shutil.move(<span class="py-fn">str</span>(file), <span class="py-fn">str</span>(dest_file))
+            stats[category] <span class="py-op">=</span> stats.get(category, <span class="py-num">0</span>) <span class="py-op">+</span> <span class="py-num">1</span>
+            logging.info(<span class="py-str">f"✓ {file.name} → {category}"</span>)
+        <span class="py-kw">except Exception as</span> e:
+            logging.error(<span class="py-str">f"✗ {file.name}: {e}"</span>)
+            errors <span class="py-op">+= 1</span>
+
+    logging.info(<span class="py-str">f"Готово. Перемещено: {sum(stats.values())}, ошибок: {errors}"</span>)
+    <span class="py-kw">return</span> stats
+
+
+<span class="py-cm"># Запуск:</span>
+<span class="py-kw">if</span> __name__ <span class="py-op">==</span> <span class="py-str">"__main__"</span>:
+    result <span class="py-op">=</span> sort_downloads(<span class="py-str">"C:/Users/user/Downloads"</span>)
+    <span class="py-kw">for</span> cat, count <span class="py-kw">in</span> result.items():
+        <span class="py-fn">print</span>(<span class="py-str">f"  {cat}: {count} файл(ов)"</span>)</pre>
+      </div>
+
+      <h3>Мониторинг директорий в реальном времени</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — directory_watcher.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># pip install watchdog</span>
+<span class="py-kw">from</span> watchdog.observers <span class="py-kw">import</span> Observer
+<span class="py-kw">from</span> watchdog.events <span class="py-kw">import</span> FileSystemEventHandler
+<span class="py-kw">import</span> time, logging
+
+<span class="py-kw">class</span> <span class="py-cls">AutoProcessor</span>(FileSystemEventHandler):
+    <span class="py-dc">"""Обработчик событий файловой системы."""</span>
+
+    <span class="py-kw">def</span> <span class="py-fn">on_created</span>(<span class="py-bi">self</span>, event):
+        <span class="py-kw">if</span> event.is_directory:
+            <span class="py-kw">return</span>
+        path <span class="py-op">=</span> event.src_path
+        logging.info(<span class="py-str">f"📥 Новый файл: {path}"</span>)
+        <span class="py-bi">self</span>.process_file(path)
+
+    <span class="py-kw">def</span> <span class="py-fn">on_moved</span>(<span class="py-bi">self</span>, event):
+        logging.info(<span class="py-str">f"🔀 Перемещён: {event.src_path} → {event.dest_path}"</span>)
+
+    <span class="py-kw">def</span> <span class="py-fn">process_file</span>(<span class="py-bi">self</span>, filepath: <span class="py-cls">str</span>):
+        <span class="py-dc">"""Твоя обработка: конвертация, валидация, отправка..."""</span>
+        <span class="py-kw">if</span> filepath.endswith(<span class="py-str">".csv"</span>):
+            logging.info(<span class="py-str">f"🔄 Запускаю обработку CSV: {filepath}"</span>)
+            <span class="py-cm"># import_to_excel(filepath)  # ← твоя функция</span>
+
+
+<span class="py-kw">def</span> <span class="py-fn">watch_folder</span>(path: <span class="py-cls">str</span>):
+    observer <span class="py-op">=</span> Observer()
+    observer.schedule(AutoProcessor(), path, recursive<span class="py-op">=</span><span class="py-kw">False</span>)
+    observer.start()
+    logging.info(<span class="py-str">f"👁️ Наблюдение за папкой: {path}"</span>)
+
+    <span class="py-kw">try</span>:
+        <span class="py-kw">while True</span>:
+            time.sleep(<span class="py-num">1</span>)
+    <span class="py-kw">except</span> <span class="py-cls">KeyboardInterrupt</span>:
+        observer.stop()
+    observer.join()
+
+
+watch_folder(<span class="py-str">"C:/Reports/incoming"</span>)</pre>
+      </div>
+
+      <h3>Архивация с логом выполнения</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — backup.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-kw">import</span> zipfile, shutil, logging
+<span class="py-kw">from</span> pathlib <span class="py-kw">import</span> Path
+<span class="py-kw">from</span> datetime <span class="py-kw">import</span> datetime
+
+
+<span class="py-kw">def</span> <span class="py-fn">create_backup</span>(source: <span class="py-cls">str</span>, dest_dir: <span class="py-cls">str</span>,
+                   max_backups: <span class="py-cls">int</span> <span class="py-op">=</span> <span class="py-num">7</span>) -> <span class="py-cls">str</span>:
+    <span class="py-dc">"""
+    Создаёт ZIP-архив папки с датой в имени.
+    Автоматически удаляет старые архивы (хранит max_backups).
+    """</span>
+    timestamp <span class="py-op">=</span> datetime.now().strftime(<span class="py-str">"%Y-%m-%d_%H-%M"</span>)
+    source_path <span class="py-op">=</span> Path(source)
+    dest_path   <span class="py-op">=</span> Path(dest_dir)
+    dest_path.mkdir(parents<span class="py-op">=</span><span class="py-kw">True</span>, exist_ok<span class="py-op">=</span><span class="py-kw">True</span>)
+
+    archive_name <span class="py-op">=</span> dest_path <span class="py-op">/</span> <span class="py-str">f"backup_{source_path.name}_{timestamp}.zip"</span>
+
+    <span class="py-cm"># Создаём архив</span>
+    <span class="py-kw">with</span> zipfile.ZipFile(archive_name, <span class="py-str">"w"</span>, zipfile.ZIP_DEFLATED) <span class="py-kw">as</span> zf:
+        <span class="py-kw">for</span> file <span class="py-kw">in</span> source_path.rglob(<span class="py-str">"*"</span>):
+            <span class="py-kw">if</span> file.is_file():
+                zf.write(file, file.relative_to(source_path))
+
+    size_mb <span class="py-op">=</span> archive_name.stat().st_size <span class="py-op">/</span> <span class="py-num">1024</span> <span class="py-op">/</span> <span class="py-num">1024</span>
+    logging.info(<span class="py-str">f"✅ Бэкап создан: {archive_name.name} ({size_mb:.1f} MB)"</span>)
+
+    <span class="py-cm"># Удаляем старые бэкапы</span>
+    backups <span class="py-op">=</span> <span class="py-fn">sorted</span>(dest_path.glob(<span class="py-str">"backup_*.zip"</span>),
+                    key<span class="py-op">=</span><span class="py-kw">lambda</span> x: x.stat().st_mtime)
+    <span class="py-kw">while</span> <span class="py-fn">len</span>(backups) <span class="py-op">></span> max_backups:
+        old <span class="py-op">=</span> backups.pop(<span class="py-num">0</span>)
+        old.unlink()
+        logging.info(<span class="py-str">f"🗑️ Удалён старый бэкап: {old.name}"</span>)
+
+    <span class="py-kw">return</span> <span class="py-fn">str</span>(archive_name)
+
+
+<span class="py-cm"># Пример: ежедневный бэкап документов</span>
+create_backup(
+    source<span class="py-op">=</span><span class="py-str">"C:/Users/user/Documents"</span>,
+    dest_dir<span class="py-op">=</span><span class="py-str">"D:/Backups"</span>,
+    max_backups<span class="py-op">=</span><span class="py-num">14</span>   <span class="py-cm"># хранить 2 недели</span>
+)</pre>
+      </div>
+
+      <div class="remember-block">
+        <div class="remember-title">🧠 ЧТО ВАЖНО ЗАПОМНИТЬ</div>
+        <ul>
+          <li>pathlib.Path — современный стандарт, используй вместо os.path.</li>
+          <li>shutil.move() — для перемещения, shutil.copy2() — для копирования с метаданными.</li>
+          <li>Всегда проверяй exist_ok=True при создании папок.</li>
+          <li>watchdog — лучший инструмент для мониторинга директорий в реальном времени.</li>
+          <li>Обрабатывай конфликты имён файлов — добавляй timestamp к дублям.</li>
+        </ul>
+      </div>
+
+      <div class="hw-block">
+        <div class="hw-title">📚 ДОМАШНЕЕ ЗАДАНИЕ</div>
+        <p>Напиши скрипт <code>smart_backup.py</code>, который: 1) Архивирует папку Documents в ZIP с датой в имени. 2) Хранит максимум 7 последних архивов. 3) Отправляет в лог информацию о размере архива и сколько файлов вошло.</p>
+        <p><strong>Звёздочка ⭐:</strong> добавь параметр — список папок-исключений (например, <code>exclude=["node_modules", ".git", "__pycache__"]</code>).</p>
+      </div>
+
+      <div class="lecture-nav">
+        <button class="btn btn-secondary lecture-nav-btn" data-dir="prev">
+          <i class="fas fa-arrow-left"></i> Лекция 1
+        </button>
+        <button class="btn btn-primary lecture-nav-btn" data-dir="next">
+          Лекция 3: Excel <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════════════
+         ЛЕКЦИЯ 3: EXCEL
+    ═══════════════════════════════════════ -->
+    <article class="lecture-section" id="lecture-3">
+      <div class="lecture-header">
+        <span class="lecture-num-badge">ЛЕКЦИЯ 03</span>
+        <h2>Автоматизация Excel и Google Sheets</h2>
+      </div>
+
+      <p>Excel — главный инструмент бизнеса. Научившись автоматически создавать, заполнять и форматировать таблицы, ты сэкономишь часы ежедневной рутины и устранишь ошибки ручного ввода.</p>
+
+      <h3>openpyxl — создание Excel с нуля</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — excel_report.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># pip install openpyxl</span>
+<span class="py-kw">import</span> openpyxl
+<span class="py-kw">from</span> openpyxl.styles <span class="py-kw">import</span> Font, PatternFill, Alignment, Border, Side
+<span class="py-kw">from</span> openpyxl.utils <span class="py-kw">import</span> get_column_letter
+<span class="py-kw">from</span> openpyxl.chart <span class="py-kw">import</span> BarChart, Reference
+<span class="py-kw">from</span> datetime <span class="py-kw">import</span> date
+
+
+<span class="py-kw">def</span> <span class="py-fn">create_sales_report</span>(data: <span class="py-cls">list</span>[<span class="py-cls">dict</span>], output_path: <span class="py-cls">str</span>) -> <span class="py-kw">None</span>:
+    <span class="py-dc">"""
+    Генерирует красивый Excel-отчёт по продажам.
+    data: [{'Менеджер': 'Иван', 'Продажи': 150000, 'Цель': 120000}]
+    """</span>
+    wb <span class="py-op">=</span> openpyxl.Workbook()
+    ws <span class="py-op">=</span> wb.active
+    ws.title <span class="py-op">=</span> <span class="py-str">"Продажи"</span>
+
+    <span class="py-cm"># ── Стили ──────────────────────────────────────</span>
+    HEADER_FONT  <span class="py-op">=</span> Font(bold<span class="py-op">=</span><span class="py-kw">True</span>, color<span class="py-op">=</span><span class="py-str">"FFFFFF"</span>, size<span class="py-op">=</span><span class="py-num">12</span>)
+    HEADER_FILL  <span class="py-op">=</span> PatternFill(<span class="py-str">"solid"</span>, fgColor<span class="py-op">=</span><span class="py-str">"1F4E79"</span>)
+    ALT_FILL     <span class="py-op">=</span> PatternFill(<span class="py-str">"solid"</span>, fgColor<span class="py-op">=</span><span class="py-str">"DEEAF1"</span>)
+    CENTER       <span class="py-op">=</span> Alignment(horizontal<span class="py-op">=</span><span class="py-str">"center"</span>, vertical<span class="py-op">=</span><span class="py-str">"center"</span>)
+    thin_border  <span class="py-op">=</span> Side(style<span class="py-op">=</span><span class="py-str">"thin"</span>, color<span class="py-op">=</span><span class="py-str">"AAAAAA"</span>)
+    BORDER       <span class="py-op">=</span> Border(
+        left<span class="py-op">=</span>thin_border, right<span class="py-op">=</span>thin_border,
+        top<span class="py-op">=</span>thin_border, bottom<span class="py-op">=</span>thin_border
+    )
+
+    <span class="py-cm"># ── Заголовок отчёта ───────────────────────────</span>
+    ws.merge_cells(<span class="py-str">"A1:E1"</span>)
+    ws[<span class="py-str">"A1"</span>] <span class="py-op">=</span> <span class="py-str">f"Отчёт по продажам — {date.today().strftime('%d.%m.%Y')}"</span>
+    ws[<span class="py-str">"A1"</span>].font      <span class="py-op">=</span> Font(bold<span class="py-op">=</span><span class="py-kw">True</span>, size<span class="py-op">=</span><span class="py-num">16</span>, color<span class="py-op">=</span><span class="py-str">"1F4E79"</span>)
+    ws[<span class="py-str">"A1"</span>].alignment <span class="py-op">=</span> CENTER
+
+    <span class="py-cm"># ── Заголовки колонок ──────────────────────────</span>
+    headers <span class="py-op">=</span> [<span class="py-str">"Менеджер"</span>, <span class="py-str">"Продажи (руб.)"</span>, <span class="py-str">"Цель (руб.)"</span>, <span class="py-str">"Выполнение %"</span>, <span class="py-str">"Статус"</span>]
+    <span class="py-kw">for</span> col, header <span class="py-kw">in</span> <span class="py-fn">enumerate</span>(headers, start<span class="py-op">=</span><span class="py-num">1</span>):
+        cell           <span class="py-op">=</span> ws.cell(row<span class="py-op">=</span><span class="py-num">2</span>, column<span class="py-op">=</span>col, value<span class="py-op">=</span>header)
+        cell.font      <span class="py-op">=</span> HEADER_FONT
+        cell.fill      <span class="py-op">=</span> HEADER_FILL
+        cell.alignment <span class="py-op">=</span> CENTER
+        cell.border    <span class="py-op">=</span> BORDER
+
+    <span class="py-cm"># ── Данные ─────────────────────────────────────</span>
+    <span class="py-kw">for</span> row_idx, row_data <span class="py-kw">in</span> <span class="py-fn">enumerate</span>(data, start<span class="py-op">=</span><span class="py-num">3</span>):
+        pct    <span class="py-op">=</span> row_data[<span class="py-str">"Продажи"</span>] <span class="py-op">/</span> row_data[<span class="py-str">"Цель"</span>] <span class="py-op">*</span> <span class="py-num">100</span>
+        status <span class="py-op">=</span> <span class="py-str">"✅ Выполнен"</span> <span class="py-kw">if</span> pct <span class="py-op">>=</span> <span class="py-num">100</span> <span class="py-kw">else</span> <span class="py-str">"⚠️ В работе"</span>
+        values <span class="py-op">=</span> [row_data[<span class="py-str">"Менеджер"</span>], row_data[<span class="py-str">"Продажи"</span>],
+                  row_data[<span class="py-str">"Цель"</span>], <span class="py-fn">round</span>(pct, <span class="py-num">1</span>), status]
+
+        fill <span class="py-op">=</span> ALT_FILL <span class="py-kw">if</span> row_idx <span class="py-op">%</span> <span class="py-num">2</span> <span class="py-op">==</span> <span class="py-num">0</span> <span class="py-kw">else</span> <span class="py-kw">None</span>
+        <span class="py-kw">for</span> col, val <span class="py-kw">in</span> <span class="py-fn">enumerate</span>(values, start<span class="py-op">=</span><span class="py-num">1</span>):
+            cell <span class="py-op">=</span> ws.cell(row<span class="py-op">=</span>row_idx, column<span class="py-op">=</span>col, value<span class="py-op">=</span>val)
+            <span class="py-kw">if</span> fill: cell.fill <span class="py-op">=</span> fill
+            cell.border    <span class="py-op">=</span> BORDER
+            cell.alignment <span class="py-op">=</span> CENTER
+
+    <span class="py-cm"># ── Авторазмер колонок ─────────────────────────</span>
+    <span class="py-kw">for</span> col <span class="py-kw">in</span> ws.columns:
+        max_len <span class="py-op">=</span> <span class="py-fn">max</span>(<span class="py-fn">len</span>(<span class="py-fn">str</span>(cell.value <span class="py-kw">or</span> <span class="py-str">""</span>)) <span class="py-kw">for</span> cell <span class="py-kw">in</span> col)
+        ws.column_dimensions[get_column_letter(col[<span class="py-num">0</span>].column)].width <span class="py-op">=</span> max_len <span class="py-op">+</span> <span class="py-num">4</span>
+
+    wb.save(output_path)
+    <span class="py-fn">print</span>(<span class="py-str">f"✅ Отчёт сохранён: {output_path}"</span>)
+
+
+<span class="py-cm"># Запуск</span>
+sales_data <span class="py-op">=</span> [
+    {<span class="py-str">"Менеджер"</span>: <span class="py-str">"Иванов И."</span>, <span class="py-str">"Продажи"</span>: <span class="py-num">145000</span>, <span class="py-str">"Цель"</span>: <span class="py-num">120000</span>},
+    {<span class="py-str">"Менеджер"</span>: <span class="py-str">"Петрова А."</span>, <span class="py-str">"Продажи"</span>: <span class="py-num">98000</span>,  <span class="py-str">"Цель"</span>: <span class="py-num">120000</span>},
+    {<span class="py-str">"Менеджер"</span>: <span class="py-str">"Сидоров В."</span>, <span class="py-str">"Продажи"</span>: <span class="py-num">187000</span>, <span class="py-str">"Цель"</span>: <span class="py-num">150000</span>},
+]
+create_sales_report(sales_data, <span class="py-str">"reports/sales_report.xlsx"</span>)</pre>
+      </div>
+
+      <h3>pandas — обработка больших таблиц</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — pandas_automation.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-kw">import</span> pandas <span class="py-kw">as</span> pd
+<span class="py-kw">from</span> pathlib <span class="py-kw">import</span> Path
+
+<span class="py-cm"># Читаем CSV-выгрузку из CRM</span>
+df <span class="py-op">=</span> pd.read_csv(<span class="py-str">"crm_export.csv"</span>, encoding<span class="py-op">=</span><span class="py-str">"utf-8-sig"</span>,
+                  parse_dates<span class="py-op">=</span>[<span class="py-str">"date"</span>])
+
+<span class="py-cm"># Чистка данных</span>
+df <span class="py-op">=</span> df.dropna(subset<span class="py-op">=</span>[<span class="py-str">"amount"</span>])          <span class="py-cm"># удалить строки без суммы</span>
+df[<span class="py-str">"amount"</span>] <span class="py-op">=</span> pd.to_numeric(df[<span class="py-str">"amount"</span>], errors<span class="py-op">=</span><span class="py-str">"coerce"</span>)
+df <span class="py-op">=</span> df[df[<span class="py-str">"status"</span>] <span class="py-op">!=</span> <span class="py-str">"cancelled"</span>]   <span class="py-cm"># исключить отменённые</span>
+
+<span class="py-cm"># Группировка: продажи по менеджерам за текущий месяц</span>
+current_month <span class="py-op">=</span> pd.Timestamp.now().month
+monthly <span class="py-op">=</span> df[df[<span class="py-str">"date"</span>].dt.month <span class="py-op">==</span> current_month]
+
+summary <span class="py-op">=</span> monthly.groupby(<span class="py-str">"manager"</span>).agg(
+    total_sales <span class="py-op">=</span> (<span class="py-str">"amount"</span>, <span class="py-str">"sum"</span>),
+    deal_count  <span class="py-op">=</span> (<span class="py-str">"amount"</span>, <span class="py-str">"count"</span>),
+    avg_deal    <span class="py-op">=</span> (<span class="py-str">"amount"</span>, <span class="py-str">"mean"</span>),
+).sort_values(<span class="py-str">"total_sales"</span>, ascending<span class="py-op">=</span><span class="py-kw">False</span>)
+
+summary[<span class="py-str">"total_sales"</span>] <span class="py-op">=</span> summary[<span class="py-str">"total_sales"</span>].<span class="py-fn">round</span>(<span class="py-num">2</span>)
+summary[<span class="py-str">"avg_deal"</span>]    <span class="py-op">=</span> summary[<span class="py-str">"avg_deal"</span>].<span class="py-fn">round</span>(<span class="py-num">2</span>)
+
+<span class="py-cm"># Экспорт в Excel с несколькими листами</span>
+<span class="py-kw">with</span> pd.ExcelWriter(<span class="py-str">"monthly_report.xlsx"</span>, engine<span class="py-op">=</span><span class="py-str">"openpyxl"</span>) <span class="py-kw">as</span> writer:
+    summary.to_excel(writer, sheet_name<span class="py-op">=</span><span class="py-str">"Сводка"</span>)
+    monthly.to_excel(writer, sheet_name<span class="py-op">=</span><span class="py-str">"Детальные данные"</span>, index<span class="py-op">=</span><span class="py-kw">False</span>)
+
+<span class="py-fn">print</span>(<span class="py-str">f"📊 Отчёт готов. Топ продавец: {summary.index[0]}"</span>)
+<span class="py-fn">print</span>(summary.to_string())</pre>
+      </div>
+
+      <div class="remember-block">
+        <div class="remember-title">🧠 ЧТО ВАЖНО ЗАПОМНИТЬ</div>
+        <ul>
+          <li>openpyxl — для создания и редактирования .xlsx с полным контролем стилей.</li>
+          <li>pandas — для анализа, трансформации и агрегации больших таблиц.</li>
+          <li>xlsxwriter — лучший движок для диаграмм и условного форматирования.</li>
+          <li>pd.ExcelWriter — запись нескольких листов в один файл.</li>
+          <li>Всегда чисти данные перед обработкой: dropna(), to_numeric(), strip().</li>
+        </ul>
+      </div>
+
+      <div class="hw-block">
+        <div class="hw-title">📚 ДОМАШНЕЕ ЗАДАНИЕ</div>
+        <p>Напиши скрипт, который читает CSV-файл с продажами (минимум 3 колонки: Дата, Товар, Сумма) и генерирует Excel-отчёт с: 1) Сводной таблицей по товарам, 2) Столбчатой диаграммой продаж, 3) Условным форматированием (зелёный если > среднего, красный если < среднего).</p>
+      </div>
+
+      <div class="lecture-nav">
+        <button class="btn btn-secondary lecture-nav-btn" data-dir="prev">
+          <i class="fas fa-arrow-left"></i> Лекция 2
+        </button>
+        <button class="btn btn-primary lecture-nav-btn" data-dir="next">
+          Лекция 4: Парсинг <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════════════
+         ЛЕКЦИЯ 4: ПАРСИНГ
+    ═══════════════════════════════════════ -->
+    <article class="lecture-section" id="lecture-4">
+      <div class="lecture-header">
+        <span class="lecture-num-badge">ЛЕКЦИЯ 04</span>
+        <h2>Парсинг сайтов и работа с API</h2>
+      </div>
+
+      <p>Интернет — крупнейшая база данных в мире. Python умеет её читать. Из этой лекции ты узнаешь, как собирать данные с любых сайтов и работать с REST API — от простых запросов до OAuth-авторизации.</p>
+
+      <h3>requests + BeautifulSoup — базовый парсинг</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — parser_basic.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># pip install requests beautifulsoup4 lxml</span>
+<span class="py-kw">import</span> requests
+<span class="py-kw">from</span> bs4 <span class="py-kw">import</span> BeautifulSoup
+<span class="py-kw">import</span> csv, time, logging
+<span class="py-kw">from</span> dataclasses <span class="py-kw">import</span> dataclass
+
+<span class="py-kw">@dataclass</span>
+<span class="py-kw">class</span> <span class="py-cls">Product</span>:
+    name:  <span class="py-cls">str</span>
+    price: <span class="py-cls">float</span>
+    url:   <span class="py-cls">str</span>
+    in_stock: <span class="py-cls">bool</span>
+
+
+<span class="py-kw">class</span> <span class="py-cls">ShopParser</span>:
+    <span class="py-kw">def</span> <span class="py-fn">__init__</span>(<span class="py-bi">self</span>, base_url: <span class="py-cls">str</span>):
+        <span class="py-bi">self</span>.base_url <span class="py-op">=</span> base_url
+        <span class="py-bi">self</span>.session  <span class="py-op">=</span> requests.Session()
+        <span class="py-bi">self</span>.session.headers.update({
+            <span class="py-str">"User-Agent"</span>: <span class="py-str">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) "</span>
+                          <span class="py-str">"AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"</span>,
+            <span class="py-str">"Accept-Language"</span>: <span class="py-str">"ru-RU,ru;q=0.9,en;q=0.8"</span>,
+        })
+
+    <span class="py-kw">def</span> <span class="py-fn">get_page</span>(<span class="py-bi">self</span>, url: <span class="py-cls">str</span>, retries: <span class="py-cls">int</span> <span class="py-op">=</span> <span class="py-num">3</span>) -> BeautifulSoup <span class="py-op">|</span> <span class="py-kw">None</span>:
+        <span class="py-dc">"""Загружает страницу с retry-логикой."""</span>
+        <span class="py-kw">for</span> attempt <span class="py-kw">in</span> <span class="py-fn">range</span>(retries):
+            <span class="py-kw">try</span>:
+                resp <span class="py-op">=</span> <span class="py-bi">self</span>.session.get(url, timeout<span class="py-op">=</span><span class="py-num">10</span>)
+                resp.raise_for_status()
+                <span class="py-kw">return</span> BeautifulSoup(resp.text, <span class="py-str">"lxml"</span>)
+            <span class="py-kw">except</span> requests.RequestException <span class="py-kw">as</span> e:
+                logging.warning(<span class="py-str">f"Попытка {attempt+1}/{retries} не удалась: {e}"</span>)
+                time.sleep(<span class="py-num">2</span> <span class="py-op">**</span> attempt)  <span class="py-cm"># экспоненциальный backoff</span>
+        <span class="py-kw">return None</span>
+
+    <span class="py-kw">def</span> <span class="py-fn">parse_catalog</span>(<span class="py-bi">self</span>, category_url: <span class="py-cls">str</span>) -> <span class="py-cls">list</span>[<span class="py-cls">Product</span>]:
+        <span class="py-dc">"""Парсит каталог товаров. Адаптируй CSS-селекторы под сайт."""</span>
+        products <span class="py-op">=</span> []
+        soup <span class="py-op">=</span> <span class="py-bi">self</span>.get_page(category_url)
+        <span class="py-kw">if not</span> soup: <span class="py-kw">return</span> products
+
+        <span class="py-kw">for</span> card <span class="py-kw">in</span> soup.select(<span class="py-str">".product-card"</span>):  <span class="py-cm"># CSS-селектор карточки</span>
+            <span class="py-kw">try</span>:
+                name_el  <span class="py-op">=</span> card.select_one(<span class="py-str">".product-title"</span>)
+                price_el <span class="py-op">=</span> card.select_one(<span class="py-str">".price"</span>)
+                link_el  <span class="py-op">=</span> card.select_one(<span class="py-str">"a[href]"</span>)
+
+                <span class="py-kw">if not</span> <span class="py-fn">all</span>([name_el, price_el]):
+                    <span class="py-kw">continue</span>
+
+                price_text <span class="py-op">=</span> price_el.text.replace(<span class="py-str">" "</span>, <span class="py-str">""</span>).replace(<span class="py-str">"руб."</span>, <span class="py-str">""</span>).strip()
+
+                products.append(Product(
+                    name     <span class="py-op">=</span> name_el.text.strip(),
+                    price    <span class="py-op">=</span> <span class="py-fn">float</span>(price_text),
+                    url      <span class="py-op">=</span> <span class="py-bi">self</span>.base_url <span class="py-op">+</span> link_el[<span class="py-str">"href"</span>],
+                    in_stock <span class="py-op">=</span> <span class="py-str">"out-of-stock"</span> <span class="py-kw">not in</span> card.get(<span class="py-str">"class"</span>, []),
+                ))
+            <span class="py-kw">except</span> (<span class="py-cls">ValueError</span>, <span class="py-cls">AttributeError</span>) <span class="py-kw">as</span> e:
+                logging.debug(<span class="py-str">f"Пропускаем карточку: {e}"</span>)
+
+        time.sleep(<span class="py-num">1.5</span>)  <span class="py-cm"># вежливая задержка между запросами!</span>
+        <span class="py-kw">return</span> products
+
+    <span class="py-kw">def</span> <span class="py-fn">save_to_csv</span>(<span class="py-bi">self</span>, products: <span class="py-cls">list</span>[<span class="py-cls">Product</span>], path: <span class="py-cls">str</span>) -> <span class="py-kw">None</span>:
+        <span class="py-kw">with</span> <span class="py-fn">open</span>(path, <span class="py-str">"w"</span>, newline<span class="py-op">=</span><span class="py-str">""</span>, encoding<span class="py-op">=</span><span class="py-str">"utf-8-sig"</span>) <span class="py-kw">as</span> f:
+            writer <span class="py-op">=</span> csv.writer(f)
+            writer.writerow([<span class="py-str">"Название"</span>, <span class="py-str">"Цена"</span>, <span class="py-str">"URL"</span>, <span class="py-str">"В наличии"</span>])
+            <span class="py-kw">for</span> p <span class="py-kw">in</span> products:
+                writer.writerow([p.name, p.price, p.url, p.in_stock])
+        logging.info(<span class="py-str">f"✅ Сохранено {len(products)} товаров в {path}"</span>)</pre>
+      </div>
+
+      <h3>REST API — профессиональная интеграция</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — api_client.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-kw">import</span> requests, os, logging
+<span class="py-kw">from</span> dotenv <span class="py-kw">import</span> load_dotenv
+
+load_dotenv()  <span class="py-cm"># читаем .env файл</span>
+
+<span class="py-kw">class</span> <span class="py-cls">APIClient</span>:
+    <span class="py-dc">"""Базовый класс для работы с REST API."""</span>
+
+    <span class="py-kw">def</span> <span class="py-fn">__init__</span>(<span class="py-bi">self</span>, base_url: <span class="py-cls">str</span>, api_key: <span class="py-cls">str</span>):
+        <span class="py-bi">self</span>.base_url <span class="py-op">=</span> base_url.rstrip(<span class="py-str">"/"</span>)
+        <span class="py-bi">self</span>.session  <span class="py-op">=</span> requests.Session()
+        <span class="py-bi">self</span>.session.headers.update({
+            <span class="py-str">"Authorization"</span>: <span class="py-str">f"Bearer {api_key}"</span>,
+            <span class="py-str">"Content-Type"</span>:  <span class="py-str">"application/json"</span>,
+        })
+
+    <span class="py-kw">def</span> <span class="py-fn">get</span>(<span class="py-bi">self</span>, endpoint: <span class="py-cls">str</span>, params: <span class="py-cls">dict</span> <span class="py-op">=</span> <span class="py-kw">None</span>) -> <span class="py-cls">dict</span>:
+        url  <span class="py-op">=</span> <span class="py-str">f"{self.base_url}/{endpoint.lstrip('/')}"</span>
+        resp <span class="py-op">=</span> <span class="py-bi">self</span>.session.get(url, params<span class="py-op">=</span>params, timeout<span class="py-op">=</span><span class="py-num">15</span>)
+        resp.raise_for_status()
+        <span class="py-kw">return</span> resp.json()
+
+    <span class="py-kw">def</span> <span class="py-fn">post</span>(<span class="py-bi">self</span>, endpoint: <span class="py-cls">str</span>, data: <span class="py-cls">dict</span>) -> <span class="py-cls">dict</span>:
+        url  <span class="py-op">=</span> <span class="py-str">f"{self.base_url}/{endpoint.lstrip('/')}"</span>
+        resp <span class="py-op">=</span> <span class="py-bi">self</span>.session.post(url, json<span class="py-op">=</span>data, timeout<span class="py-op">=</span><span class="py-num">15</span>)
+        resp.raise_for_status()
+        <span class="py-kw">return</span> resp.json()
+
+
+<span class="py-cm"># Пример: работа с API обменных курсов</span>
+API_KEY  <span class="py-op">=</span> os.getenv(<span class="py-str">"EXCHANGE_API_KEY"</span>)
+client   <span class="py-op">=</span> APIClient(<span class="py-str">"https://api.exchangerate.host"</span>, API_KEY)
+
+data     <span class="py-op">=</span> client.get(<span class="py-str">"latest"</span>, params<span class="py-op">=</span>{<span class="py-str">"base"</span>: <span class="py-str">"USD"</span>, <span class="py-str">"symbols"</span>: <span class="py-str">"RUB,EUR,CNY"</span>})
+usd_rub  <span class="py-op">=</span> data[<span class="py-str">"rates"</span>][<span class="py-str">"RUB"</span>]
+logging.info(<span class="py-str">f"Курс USD/RUB: {usd_rub}"</span>)</pre>
+      </div>
+
+      <div class="info-box danger">
+        <span class="info-box-icon">🚫</span>
+        <div class="info-box-content">
+          <strong>Важно о парсинге:</strong> перед парсингом любого сайта проверяй <code>robots.txt</code> и условия использования. Никогда не делай более 1 запроса в секунду без явного разрешения. Парсинг для личного использования и анализа обычно законен; коммерческое использование данных без разрешения может нарушать ToS.
+        </div>
+      </div>
+
+      <div class="remember-block">
+        <div class="remember-title">🧠 ЧТО ВАЖНО ЗАПОМНИТЬ</div>
+        <ul>
+          <li>Всегда устанавливай User-Agent, иначе тебя заблокируют первым же запросом.</li>
+          <li>Retry-логика с экспоненциальным backoff — обязательна для надёжного парсера.</li>
+          <li>API-ключи только через .env, никогда в коде.</li>
+          <li>Задержка 1-3 секунды между запросами — уважение к серверу и защита от бана.</li>
+          <li>dataclasses — лучший способ хранить структурированные данные из парсера.</li>
+        </ul>
+      </div>
+
+      <div class="hw-block">
+        <div class="hw-title">📚 ДОМАШНЕЕ ЗАДАНИЕ</div>
+        <p>Напиши парсер hh.ru (или любого job-сайта) по ключевому слову "Python". Собери: название вакансии, компания, зарплата, ссылка. Сохрани в CSV и Excel. Добавь фильтр по минимальной зарплате.</p>
+      </div>
+
+      <div class="lecture-nav">
+        <button class="btn btn-secondary lecture-nav-btn" data-dir="prev">
+          <i class="fas fa-arrow-left"></i> Лекция 3
+        </button>
+        <button class="btn btn-primary lecture-nav-btn" data-dir="next">
+          Лекция 5: Боты <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════════════
+         ЛЕКЦИЯ 5: БОТЫ
+    ═══════════════════════════════════════ -->
+    <article class="lecture-section" id="lecture-5">
+      <div class="lecture-header">
+        <span class="lecture-num-badge">ЛЕКЦИЯ 05</span>
+        <h2>Боты и автоматизация процессов</h2>
+      </div>
+
+      <p>Telegram-боты — самый быстрый способ дать пользователям интерфейс для твоего Python-скрипта. Плюс планировщики задач, email-рассылки и daemon-процессы для работы 24/7.</p>
+
+      <h3>Telegram-бот с командами и кнопками</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — telegram_bot.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># pip install python-telegram-bot==20.x</span>
+<span class="py-kw">import</span> logging, os
+<span class="py-kw">from</span> telegram <span class="py-kw">import</span> Update, InlineKeyboardButton, InlineKeyboardMarkup
+<span class="py-kw">from</span> telegram.ext <span class="py-kw">import</span> (Application, CommandHandler,
+                             CallbackQueryHandler, ContextTypes)
+<span class="py-kw">from</span> dotenv <span class="py-kw">import</span> load_dotenv
+
+load_dotenv()
+TOKEN <span class="py-op">=</span> os.getenv(<span class="py-str">"TELEGRAM_TOKEN"</span>)
+
+<span class="py-cm"># ── Хендлеры ───────────────────────────────────</span>
+<span class="py-kw">async def</span> <span class="py-fn">start</span>(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> <span class="py-kw">None</span>:
+    keyboard <span class="py-op">=</span> [
+        [InlineKeyboardButton(<span class="py-str">"📊 Отчёт за сегодня"</span>,  callback_data<span class="py-op">=</span><span class="py-str">"report_today"</span>)],
+        [InlineKeyboardButton(<span class="py-str">"📁 Статус файлов"</span>,    callback_data<span class="py-op">=</span><span class="py-str">"files_status"</span>)],
+        [InlineKeyboardButton(<span class="py-str">"⚙️ Запустить скрипт"</span>, callback_data<span class="py-op">=</span><span class="py-str">"run_script"</span>)],
+    ]
+    <span class="py-kw">await</span> update.message.reply_text(
+        text<span class="py-op">=</span><span class="py-str">f"👋 Привет, {update.effective_user.first_name}!\n\nЧто сделать?"</span>,
+        reply_markup<span class="py-op">=</span>InlineKeyboardMarkup(keyboard),
+    )
+
+
+<span class="py-kw">async def</span> <span class="py-fn">button_handler</span>(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> <span class="py-kw">None</span>:
+    query <span class="py-op">=</span> update.callback_query
+    <span class="py-kw">await</span> query.answer()
+
+    <span class="py-kw">if</span> query.data <span class="py-op">==</span> <span class="py-str">"report_today"</span>:
+        <span class="py-cm"># Генерируем реальный отчёт из нашего Excel-модуля</span>
+        report_path <span class="py-op">=</span> generate_daily_report()  <span class="py-cm"># ← твоя функция</span>
+        <span class="py-kw">await</span> query.message.reply_document(
+            document<span class="py-op">=</span><span class="py-fn">open</span>(report_path, <span class="py-str">"rb"</span>),
+            filename<span class="py-op">=</span><span class="py-str">"report_today.xlsx"</span>,
+            caption<span class="py-op">=</span><span class="py-str">"📊 Отчёт за сегодня готов!"</span>,
+        )
+
+    <span class="py-kw">elif</span> query.data <span class="py-op">==</span> <span class="py-str">"files_status"</span>:
+        stats <span class="py-op">=</span> get_files_stats()  <span class="py-cm"># ← твоя функция</span>
+        msg <span class="py-op">=</span> <span class="py-str">"📁 *Статус файлов:*\n"</span> <span class="py-op">+</span> <span class="py-str">"\n"</span>.join(
+            <span class="py-str">f"• {k}: `{v}`"</span> <span class="py-kw">for</span> k, v <span class="py-kw">in</span> stats.items()
+        )
+        <span class="py-kw">await</span> query.message.reply_text(msg, parse_mode<span class="py-op">=</span><span class="py-str">"Markdown"</span>)
+
+
+<span class="py-kw">async def</span> <span class="py-fn">status_cmd</span>(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> <span class="py-kw">None</span>:
+    <span class="py-kw">await</span> update.message.reply_text(<span class="py-str">"✅ Бот работает. Всё в порядке."</span>)
+
+
+<span class="py-cm"># ── Запуск ─────────────────────────────────────</span>
+<span class="py-kw">def</span> <span class="py-fn">main</span>() -> <span class="py-kw">None</span>:
+    logging.basicConfig(level<span class="py-op">=</span>logging.INFO)
+    app <span class="py-op">=</span> Application.builder().token(TOKEN).build()
+
+    app.add_handler(CommandHandler(<span class="py-str">"start"</span>,  start))
+    app.add_handler(CommandHandler(<span class="py-str">"status"</span>, status_cmd))
+    app.add_handler(CallbackQueryHandler(button_handler))
+
+    <span class="py-fn">print</span>(<span class="py-str">"🤖 Бот запущен. Ctrl+C для остановки."</span>)
+    app.run_polling(allowed_updates<span class="py-op">=</span>Update.ALL_TYPES)
+
+
+<span class="py-kw">if</span> __name__ <span class="py-op">==</span> <span class="py-str">"__main__"</span>:
+    main()</pre>
+      </div>
+
+      <h3>Планировщик задач — schedule</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — scheduler.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># pip install schedule</span>
+<span class="py-kw">import</span> schedule, time, logging
+
+
+<span class="py-kw">def</span> <span class="py-fn">morning_report</span>():
+    <span class="py-dc">"""Запускается каждый будний день в 9:00."""</span>
+    logging.info(<span class="py-str">"📊 Генерирую утренний отчёт..."</span>)
+    <span class="py-cm"># create_report() → send_email()</span>
+
+
+<span class="py-kw">def</span> <span class="py-fn">hourly_backup</span>():
+    logging.info(<span class="py-str">"💾 Создаю бэкап данных..."</span>)
+    <span class="py-cm"># create_backup()</span>
+
+
+<span class="py-kw">def</span> <span class="py-fn">price_monitor</span>():
+    logging.info(<span class="py-str">"🔍 Проверяю цены конкурентов..."</span>)
+    <span class="py-cm"># parser.check_prices()</span>
+
+
+<span class="py-cm"># Расписание</span>
+schedule.every().monday.at(<span class="py-str">"09:00"</span>).do(morning_report)
+schedule.every().tuesday.at(<span class="py-str">"09:00"</span>).do(morning_report)
+schedule.every().wednesday.at(<span class="py-str">"09:00"</span>).do(morning_report)
+schedule.every().thursday.at(<span class="py-str">"09:00"</span>).do(morning_report)
+schedule.every().friday.at(<span class="py-str">"09:00"</span>).do(morning_report)
+
+schedule.every().hour.do(hourly_backup)
+schedule.every(<span class="py-num">30</span>).minutes.do(price_monitor)
+
+logging.info(<span class="py-str">"⏰ Планировщик запущен. Следующие задачи:"</span>)
+<span class="py-kw">for</span> job <span class="py-kw">in</span> schedule.jobs:
+    logging.info(<span class="py-str">f"  → {job}"</span>)
+
+<span class="py-kw">while True</span>:
+    schedule.run_pending()
+    time.sleep(<span class="py-num">30</span>)</pre>
+      </div>
+
+      <h3>Email автоматизация</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — email_sender.py</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-kw">import</span> smtplib, os, logging
+<span class="py-kw">from</span> email.mime.multipart <span class="py-kw">import</span> MIMEMultipart
+<span class="py-kw">from</span> email.mime.text <span class="py-kw">import</span> MIMEText
+<span class="py-kw">from</span> email.mime.base <span class="py-kw">import</span> MIMEBase
+<span class="py-kw">from</span> email <span class="py-kw">import</span> encoders
+<span class="py-kw">from</span> pathlib <span class="py-kw">import</span> Path
+
+
+<span class="py-kw">def</span> <span class="py-fn">send_report_email</span>(
+    to_emails:  <span class="py-cls">list</span>[<span class="py-cls">str</span>],
+    subject:    <span class="py-cls">str</span>,
+    body_html:  <span class="py-cls">str</span>,
+    attachments:<span class="py-cls">list</span>[<span class="py-cls">str</span>] <span class="py-op">=</span> <span class="py-kw">None</span>,
+) -> <span class="py-cls">bool</span>:
+    <span class="py-dc">"""Отправляет HTML-письмо с вложениями через Gmail/SMTP."""</span>
+    smtp_host <span class="py-op">=</span> os.getenv(<span class="py-str">"SMTP_HOST"</span>, <span class="py-str">"smtp.gmail.com"</span>)
+    smtp_port <span class="py-op">=</span> <span class="py-fn">int</span>(os.getenv(<span class="py-str">"SMTP_PORT"</span>, <span class="py-str">"587"</span>))
+    smtp_user <span class="py-op">=</span> os.getenv(<span class="py-str">"SMTP_USER"</span>)
+    smtp_pass <span class="py-op">=</span> os.getenv(<span class="py-str">"SMTP_PASS"</span>)
+
+    msg <span class="py-op">=</span> MIMEMultipart(<span class="py-str">"alternative"</span>)
+    msg[<span class="py-str">"From"</span>]    <span class="py-op">=</span> smtp_user
+    msg[<span class="py-str">"To"</span>]      <span class="py-op">=</span> <span class="py-str">", "</span>.join(to_emails)
+    msg[<span class="py-str">"Subject"</span>] <span class="py-op">=</span> subject
+    msg.attach(MIMEText(body_html, <span class="py-str">"html"</span>, <span class="py-str">"utf-8"</span>))
+
+    <span class="py-cm"># Добавляем вложения</span>
+    <span class="py-kw">for</span> file_path <span class="py-kw">in</span> (attachments <span class="py-kw">or</span> []):
+        path <span class="py-op">=</span> Path(file_path)
+        <span class="py-kw">with</span> <span class="py-fn">open</span>(path, <span class="py-str">"rb"</span>) <span class="py-kw">as</span> f:
+            part <span class="py-op">=</span> MIMEBase(<span class="py-str">"application"</span>, <span class="py-str">"octet-stream"</span>)
+            part.set_payload(f.read())
+        encoders.encode_base64(part)
+        part.add_header(<span class="py-str">"Content-Disposition"</span>, <span class="py-str">f'attachment; filename="{path.name}"'</span>)
+        msg.attach(part)
+
+    <span class="py-kw">try</span>:
+        <span class="py-kw">with</span> smtplib.SMTP(smtp_host, smtp_port) <span class="py-kw">as</span> server:
+            server.starttls()
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(smtp_user, to_emails, msg.as_string())
+        logging.info(<span class="py-str">f"✉️ Письмо отправлено: {', '.join(to_emails)}"</span>)
+        <span class="py-kw">return True</span>
+    <span class="py-kw">except</span> <span class="py-cls">Exception</span> <span class="py-kw">as</span> e:
+        logging.error(<span class="py-str">f"❌ Ошибка отправки email: {e}"</span>)
+        <span class="py-kw">return False</span></pre>
+      </div>
+
+      <div class="remember-block">
+        <div class="remember-title">🧠 ЧТО ВАЖНО ЗАПОМНИТЬ</div>
+        <ul>
+          <li>python-telegram-bot v20+ использует asyncio — весь код async/await.</li>
+          <li>schedule — простой планировщик для локальных машин. На VPS лучше cron.</li>
+          <li>Telegram-токен только в .env, никогда в открытый репозиторий.</li>
+          <li>Для Gmail — App Password вместо основного пароля (в настройках Google).</li>
+          <li>Запускай боты через systemd на Linux или NSSM на Windows как сервис.</li>
+        </ul>
+      </div>
+
+      <div class="hw-block">
+        <div class="hw-title">📚 ДОМАШНЕЕ ЗАДАНИЕ</div>
+        <p>Создай Telegram-бота, который принимает команду /report и отвечает текстовой статистикой о файлах в указанной папке (количество, суммарный размер, последний изменённый). Добавь кнопки "Обновить" и "Очистить папку".</p>
+      </div>
+
+      <div class="lecture-nav">
+        <button class="btn btn-secondary lecture-nav-btn" data-dir="prev">
+          <i class="fas fa-arrow-left"></i> Лекция 4
+        </button>
+        <button class="btn btn-primary lecture-nav-btn" data-dir="next">
+          Лекция 6: Деплой <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════════════
+         ЛЕКЦИЯ 6: ДЕПЛОЙ
+    ═══════════════════════════════════════ -->
+    <article class="lecture-section" id="lecture-6">
+      <div class="lecture-header">
+        <span class="lecture-num-badge">ЛЕКЦИЯ 06</span>
+        <h2>Создание .exe-приложений и деплой</h2>
+      </div>
+
+      <p>Финальный шаг: упаковать скрипт в готовый продукт. Превращаем Python-скрипт в .exe для Windows, деплоим на Linux-сервер, настраиваем Docker и CI/CD через GitHub Actions.</p>
+
+      <h3>PyInstaller — .exe за 5 минут</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">BASH — PyInstaller команды</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># pip install pyinstaller</span>
+
+<span class="py-cm"># Базовая сборка (создаёт dist/main.exe)</span>
+pyinstaller main.py
+
+<span class="py-cm"># One-file: всё в одном .exe файле</span>
+pyinstaller --onefile main.py
+
+<span class="py-cm"># Без консольного окна (для GUI-приложений)</span>
+pyinstaller --onefile --windowed main.py
+
+<span class="py-cm"># С иконкой и именем</span>
+pyinstaller --onefile --windowed \
+            --icon=assets/icon.ico \
+            --name="AutoReport" \
+            main.py
+
+<span class="py-cm"># Добавить дополнительные файлы (конфиги, шаблоны)</span>
+pyinstaller --onefile \
+            --add-data "templates;templates" \
+            --add-data "config.yaml;." \
+            main.py</pre>
+      </div>
+
+      <h3>spec-файл для точной настройки</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">PYTHON — main.spec</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># -*- mode: python ; coding: utf-8 -*-</span>
+<span class="py-cm"># Генерируется автоматически, можно редактировать</span>
+
+block_cipher <span class="py-op">=</span> <span class="py-kw">None</span>
+
+a <span class="py-op">=</span> Analysis(
+    [<span class="py-str">'main.py'</span>],
+    pathex<span class="py-op">=</span>[],
+    binaries<span class="py-op">=</span>[],
+    datas<span class="py-op">=</span>[
+        (<span class="py-str">'templates'</span>, <span class="py-str">'templates'</span>),   <span class="py-cm"># (source, dest в .exe)</span>
+        (<span class="py-str">'config.yaml'</span>, <span class="py-str">'.'</span>),
+    ],
+    hiddenimports<span class="py-op">=</span>[                   <span class="py-cm"># для import внутри строк</span>
+        <span class="py-str">'openpyxl'</span>,
+        <span class="py-str">'pandas'</span>,
+        <span class="py-str">'PIL._tkinter_finder'</span>,
+    ],
+    hookspath<span class="py-op">=</span>[],
+    noarchive<span class="py-op">=</span><span class="py-kw">False</span>,
+)
+
+pyz <span class="py-op">=</span> PYZ(a.pure, a.zipped_data, cipher<span class="py-op">=</span>block_cipher)
+
+exe <span class="py-op">=</span> EXE(
+    pyz, a.scripts, a.binaries, a.zipfiles, a.datas,
+    name<span class="py-op">=</span><span class="py-str">'AutoReport'</span>,
+    debug<span class="py-op">=</span><span class="py-kw">False</span>,
+    bootloader_ignore_signals<span class="py-op">=</span><span class="py-kw">False</span>,
+    strip<span class="py-op">=</span><span class="py-kw">False</span>,
+    upx<span class="py-op">=</span><span class="py-kw">True</span>,        <span class="py-cm"># UPX-сжатие (pip install upx)</span>
+    console<span class="py-op">=</span><span class="py-kw">False</span>,    <span class="py-cm"># без чёрного окна консоли</span>
+    icon<span class="py-op">=</span><span class="py-str">'assets/icon.ico'</span>,
+)</pre>
+      </div>
+
+      <h3>Docker для Python-скриптов</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">DOCKERFILE</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># Dockerfile для Python-автоматизации</span>
+FROM python:3.12-slim
+
+<span class="py-cm"># Рабочая директория</span>
+WORKDIR /app
+
+<span class="py-cm"># Зависимости (кешируются отдельным слоем)</span>
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+<span class="py-cm"># Код приложения</span>
+COPY src/ ./src/
+COPY main.py config.yaml ./
+
+<span class="py-cm"># Создаём папку для логов и данных</span>
+RUN mkdir -p logs data/input data/output
+
+<span class="py-cm"># Переменные среды (переопределяются через docker run -e)</span>
+ENV PYTHONUNBUFFERED=1
+ENV TZ=Europe/Moscow
+
+<span class="py-cm"># Запуск</span>
+CMD ["python", "main.py"]</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">BASH — Docker команды</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-cm"># Сборка образа</span>
+docker build -t my-automation .
+
+<span class="py-cm"># Запуск с переменными среды и монтированием папки</span>
+docker run -d \
+  --name auto-bot \
+  --restart always \
+  -e TELEGRAM_TOKEN=your_token \
+  -v /home/user/data:/app/data \
+  -v /home/user/logs:/app/logs \
+  my-automation
+
+<span class="py-cm"># Просмотр логов</span>
+docker logs -f auto-bot
+
+<span class="py-cm"># docker-compose.yml для сложных сетапов</span>
+<span class="py-cm"># docker-compose up -d</span></pre>
+      </div>
+
+      <h3>GitHub Actions — автоматический запуск по расписанию</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">YAML — .github/workflows/daily-report.yml</span>
+          <button class="code-copy-btn">COPY</button>
+        </div>
+        <pre><span class="py-kw">name</span>: Daily Report
+
+<span class="py-kw">on</span>:
+  schedule:
+    - cron: <span class="py-str">'0 7 * * 1-5'</span>   <span class="py-cm"># каждый будний день в 7:00 UTC</span>
+  workflow_dispatch:           <span class="py-cm"># и по кнопке вручную</span>
+
+<span class="py-kw">jobs</span>:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: <span class="py-str">'3.12'</span>
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run automation script
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          SMTP_USER:      ${{ secrets.SMTP_USER }}
+          SMTP_PASS:      ${{ secrets.SMTP_PASS }}
+        run: python main.py
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-report
+          path: output/*.xlsx</pre>
+      </div>
+
+      <div class="info-box tip">
+        <span class="info-box-icon">💡</span>
+        <div class="info-box-content">
+          <strong>GitHub Actions = бесплатный планировщик!</strong> 2000 минут в месяц для публичных репозиториев. Для ежедневного скрипта на 5 минут этого хватит на 400 запусков — больше года ежедневной работы.
+        </div>
+      </div>
+
+      <div class="remember-block">
+        <div class="remember-title">🧠 ЧТО ВАЖНО ЗАПОМНИТЬ</div>
+        <ul>
+          <li>PyInstaller собирает .exe только под ту ОС, где запущен (Windows → .exe).</li>
+          <li>--onefile удобен для распространения, --onedir быстрее запускается.</li>
+          <li>Docker: один сервис — один контейнер. Не пихай бота и парсер в один образ.</li>
+          <li>GitHub Secrets — обязательно для токенов в CI/CD, никакого хардкода.</li>
+          <li>Всегда добавляй --restart always в docker run для автозапуска после перезагрузки.</li>
+        </ul>
+      </div>
+
+      <div class="hw-block">
+        <div class="hw-title">📚 ДОМАШНЕЕ ЗАДАНИЕ — ФИНАЛЬНЫЙ ШАГ</div>
+        <p>Возьми любой скрипт из предыдущих лекций и: 1) Собери .exe через PyInstaller с иконкой. 2) Напиши Dockerfile. 3) Создай GitHub Actions workflow, который запускает скрипт каждую неделю. 4) Настрой сохранение результата как artifact.</p>
+        <p><strong>Звёздочка ⭐⭐:</strong> настрой уведомление в Telegram при успешном/неуспешном выполнении GitHub Action.</p>
+      </div>
+
+      <div class="lecture-nav">
+        <button class="btn btn-secondary lecture-nav-btn" data-dir="prev">
+          <i class="fas fa-arrow-left"></i> Лекция 5
+        </button>
+        <a href="practice.html" class="btn btn-primary">
+          <i class="fas fa-code"></i> Перейти к практике →
+        </a>
+      </div>
+    </article>
+
+  </main>
+</div>
+
+<!-- Progress Widget -->
+<div class="progress-widget">
+  <div class="pw-label">ПРОГРЕСС</div>
+  <div class="pw-bar-wrap"><div class="pw-bar" style="width:0%"></div></div>
+  <div class="pw-text">0% изучено</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
